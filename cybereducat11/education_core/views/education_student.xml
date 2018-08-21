@@ -123,7 +123,7 @@
                                     <field name="gender"/>
                                     <field name="date_of_birth"/>
                                     <field name="blood_group"/>
-                                    <field name="caste_id"/>
+                                    <field name="guardian_relation"/>
                                     <field name="nationality"/>
                                 </group>
                             </group>

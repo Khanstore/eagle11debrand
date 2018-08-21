@@ -1,25 +1,5 @@
 # -*- coding: utf-8 -*-
-###################################################################################
-#    A part of Educational ERP Project <https://www.educationalerp.com>
-#
-#    Cybrosys Technologies Pvt. Ltd.
-#    Copyright (C) 2018-TODAY Cybrosys Technologies (<https://www.cybrosys.com>).
-#    Author: Avinash Nk (<https://www.cybrosys.com>)
-#
-#    This program is free software: you can modify
-#    it under the terms of the GNU Affero General Public License (AGPL) as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-#
-###################################################################################
+
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
@@ -190,7 +170,11 @@ class StudentsExamValuationLine(models.Model):
 
     student_id = fields.Many2one('education.student', string='Students')
     student_name = fields.Char(string='Students')
-    mark_scored = fields.Float(string='Mark')
+    mark_scored = fields.Float(string='Mark',compute='calculate_marks')
+    tut_mark=fields.Float(string='Tutorial')
+    sub_mark=fields.Float(string='Subjective')
+    ob_mark=fields.Float(string='Objective')
+    prac_mark=fields.Float(string='Practical')
     pass_or_fail = fields.Boolean(string='Pass/Fail')
     valuation_id = fields.Many2one('education.exam.valuation', string='Valuation Id')
     company_id = fields.Many2one('res.company', string='Company',
@@ -204,3 +188,8 @@ class StudentsExamValuationLine(models.Model):
             self.pass_or_fail = True
         else:
             self.pass_or_fail = False
+    @api.multi
+    @api.onchange('tut_mark','sub_mark','ob_mark','prac_mark')
+    def calculate_marks(self):
+        for rec in self:
+            rec.mark_scored=rec.tut_mark+ rec.ob_mark+rec.sub_mark+rec.prac_mark

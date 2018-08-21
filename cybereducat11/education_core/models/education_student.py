@@ -1,26 +1,4 @@
 # -*- coding: utf-8 -*-
-###################################################################################
-#    A part of Educational ERP Project <https://www.educationalerp.com>
-#
-#    Cybrosys Technologies Pvt. Ltd.
-#    Copyright (C) 2018-TODAY Cybrosys Technologies (<https://www.cybrosys.com>).
-#    Author: Niyas Raphy (niyas@cybrosys.in)
-#            Nikhil krishnan (nikhil@cybrosys.in)
-#
-#    This program is free software: you can modify
-#    it under the terms of the GNU Affero General Public License (AGPL) as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-#
-###################################################################################
 
 from odoo import fields, models, api, _
 
@@ -73,9 +51,15 @@ class EducationStudent(models.Model):
     last_name = fields.Char(string='Last Name')
     application_no = fields.Char(string="Application No")
     date_of_birth = fields.Date(string="Date Of birth", requird=True)
+    guardian_relation = fields.Many2one('gurdian.student.relation', string="Relation to Guardian", required=True,
+                                        help="Tell us the Relation toyour guardian")
     guardian_name = fields.Many2one('res.partner', string="Guardian", domain=[('is_parent', '=', True)])
-    father_name = fields.Char(string="Father")
-    mother_name = fields.Char(string="Mother")
+    # father_name = fields.Char(string="Father")
+    # mother_name = fields.Char(string="Mother")
+    father_name = fields.Many2one('res.partner', string="Father", domain=[('is_parent', '=', True)], required=True,
+                                  help="Proud to say my father is")
+    mother_name = fields.Many2one('res.partner', string="Mother", domain=[('is_parent', '=', True)], required=True,
+                                  help="My mother name is")
     class_id = fields.Many2one('education.class.division', string="Class")
     admission_class = fields.Many2one('education.class', string="Admission Class")
     ad_no = fields.Char(string="Admission Number", readonly=True)
