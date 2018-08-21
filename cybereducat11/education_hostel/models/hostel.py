@@ -27,7 +27,7 @@ class EducationHostel(models.Model):
     zip = fields.Char('Zip', change_default=True)
     city = fields.Char('City')
     state_id = fields.Many2one("res.country.state", string='State')
-    country_id = fields.Many2one('res.country', string='Country')
+    country_id = fields.Many2one('res.country',default=19, string='Country')
     phone = fields.Char('Phone')
     mobile = fields.Char('Mobile')
     email = fields.Char('Email')

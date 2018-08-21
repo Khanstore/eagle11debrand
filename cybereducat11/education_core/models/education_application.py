@@ -1,30 +1,17 @@
 # -*- coding: utf-8 -*-
-###################################################################################
-#    A part of Educational ERP Project <https://www.educationalerp.com>
-#
-#    Cybrosys Technologies Pvt. Ltd.
-#    Copyright (C) 2018-TODAY Cybrosys Technologies (<https://www.cybrosys.com>).
-#    Author: Niyas Raphy (niyas@cybrosys.in)
-#            Nikhil krishnan (nikhil@cybrosys.in)
-#
-#    This program is free software: you can modify
-#    it under the terms of the GNU Affero General Public License (AGPL) as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-#
-###################################################################################
 
 from odoo import fields, models, _, api
 from odoo.exceptions import ValidationError
 
+class GuardianStudentRelation(models.Model):
+    _name='gurdian.student.relation'
+    name=fields.Char(string='Name',required=True)
+    gender=fields.Selection([('m',"Male"),
+                             ('f','Female'),
+                             ('b', 'Both')])
+    relation=fields.Char(string='Relation',required=True)
+    reverse_male=fields.Char(string='Reverse  Relation (Male)',required=True)
+    reverse_female=fields.Char(string='Reverse Relation (Female)',required=True)
 
 class StudentApplication(models.Model):
     _name = 'education.application'
@@ -67,8 +54,8 @@ class StudentApplication(models.Model):
                 'last_name': rec.last_name,
                 'middle_name': rec.middle_name,
                 'application_id': rec.id,
-                'father_name': rec.father_name,
-                'mother_name': rec.mother_name,
+                'father_name': rec.father_name.id,
+                'mother_name': rec.mother_name.id,
                 'guardian_name': rec.guardian_name.id,
                 'street': rec.street,
                 'street2': rec.street2,
@@ -206,7 +193,7 @@ class StudentApplication(models.Model):
     email = fields.Char(string="Email", help="Enter E-mail id for contact purpose")
     phone = fields.Char(string="Phone", help="Enter Phone no. for contact purpose")
     mobile = fields.Char(string="Mobile", required=True, help="Enter Mobile num for contact purpose")
-    nationality = fields.Many2one('res.country', string='Nationality', ondelete='restrict',
+    nationality = fields.Many2one('res.country', string='Nationality', ondelete='restrict',default=19,
                                   help="Select the Nationality")
 
     street = fields.Char(string='Street', help="Enter the street")
@@ -215,7 +202,7 @@ class StudentApplication(models.Model):
     city = fields.Char(string='City', help="Enter the City name")
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict',
                                help="Select the State where you are from")
-    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict',
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict',default=19,
                                  help="Select the Country")
     is_same_address = fields.Boolean(string="Permanent Address same as above", default=True,
                                      help="Tick the field if the Present and permanent address is same")
@@ -225,14 +212,20 @@ class StudentApplication(models.Model):
     per_city = fields.Char(string='City', help="Enter the City name")
     per_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict',
                                    help="Select the State where you are from")
-    per_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict',
+    per_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict',default=19,
                                      help="Select the Country")
     date_of_birth = fields.Date(string="Date Of birth", required=True, help="Enter your DOB")
+    guardian_relation = fields.Many2one('gurdian.student.relation', string="Relation to Guardian",  required=True,
+                                        help="Tell us the Relation toyour guardian")
     guardian_name = fields.Many2one('res.partner', string="Guardian", domain=[('is_parent', '=', True)], required=True,
                                     help="Tell us who will take care of you")
     description = fields.Text(string="Note")
-    father_name = fields.Char(string="Father", help="Proud to say my father is")
-    mother_name = fields.Char(string="Mother", help="My mother's name is")
+    # father_name = fields.Char(string="Father", help="Proud to say my father is")
+    father_name = fields.Many2one('res.partner', string="Father", domain=[('is_parent', '=', True)], required=True,
+                                    help="Proud to say my father is")
+    # mother_name = fields.Char(string="Mother", help="My mother's name is")
+    mother_name = fields.Many2one('res.partner', string="Mother", domain=[('is_parent', '=', True)], required=True,
+                                    help="My mother name is")
     religion_id = fields.Many2one('religion.religion', string="Religion", help="My Religion is ")
     caste_id = fields.Many2one('religion.caste', string="Caste", help="My Caste is ")
     class_id = fields.Many2one('education.class.division', string="Class")

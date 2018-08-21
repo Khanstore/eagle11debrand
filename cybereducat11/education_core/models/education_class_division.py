@@ -1,36 +1,20 @@
 # -*- coding: utf-8 -*-
-###################################################################################
-#    A part of Educational ERP Project <https://www.educationalerp.com>
-#
-#    Cybrosys Technologies Pvt. Ltd.
-#    Copyright (C) 2018-TODAY Cybrosys Technologies (<https://www.cybrosys.com>).
-#    Author: Nikhil krishnan (nikhil@cybrosys.in)
-#            Niyas Raphy (niyas@cybrosys.in)
-#
-#    This program is free software: you can modify
-#    it under the terms of the GNU Affero General Public License (AGPL) as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-#
-###################################################################################
 
 from odoo.exceptions import ValidationError
 from odoo import fields, models, api, _
 
-
+class educationClassSection(models.Model):
+    _name='education.class.section'
+    _description='Sections'
+    name=fields.Char('Section')
+    classes_ids=fields.Many2many('education.class','section_ids',string='Classes')
 class EducationClass(models.Model):
     _name = 'education.class'
     _description = "Standard"
-
+    sequence=fields.Integer("Sequence")
+    section_ids=fields.Many2many('education.class.section','classes_ids',string='Sections')
     name = fields.Char(string='Name', required=True, help="Enter the Name of the Class")
+    code = fields.Char(string='Code', required=True, help="Enter the Code of the Class")
     syllabus_ids = fields.One2many('education.syllabus', 'class_id')
     division_ids = fields.One2many('education.division', 'class_id')
 

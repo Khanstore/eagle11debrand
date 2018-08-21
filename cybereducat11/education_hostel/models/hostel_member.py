@@ -36,7 +36,7 @@ class EducationHostelMember(models.Model):
     zip = fields.Char('Zip', change_default=True, related='member_std_name.per_zip')
     city = fields.Char('City', related='member_std_name.per_city')
     state_id = fields.Many2one("res.country.state", string='State', related='member_std_name.per_state_id')
-    country_id = fields.Many2one('res.country', string='Country', related='member_std_name.per_country_id')
+    country_id = fields.Many2one('res.country', string='Country',default=19, related='member_std_name.per_country_id')
     allocation_detail = fields.One2many('education.room_member', 'room_member', string="Allocation_details")
     hostel = fields.Many2one('education.hostel', string="Hostel")
     room = fields.Many2one('education.room', string="Room")

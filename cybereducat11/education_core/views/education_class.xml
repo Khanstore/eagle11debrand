@@ -6,7 +6,9 @@
         <field name="model">education.class</field>
         <field name="arch" type="xml">
             <tree string="Standard">
+                <field name="sequence"/>
                 <field name="name"/>
+                <field name="code"/>
             </tree>
         </field>
     </record>
@@ -16,11 +18,15 @@
         <field name="model">education.class</field>
         <field name="arch" type="xml">
             <form string="Standard">
-                <group>
-                    <group>
-                        <field name="name"/>
-                    </group>
+                <group >
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="code"/>
                 </group>
+                <group string="Sections">
+                     <field name="section_ids" nolabel="True" />
+                </group>
+
                 <notebook>
                         <page string="Syllabus">
                             <field name="syllabus_ids" nolabel="1">

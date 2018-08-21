@@ -11,6 +11,7 @@
     'data': [
         'security/education_security.xml',
         'security/ir.model.access.csv',
+        'data/gurdian.student.relation.csv',
         'views/education_main_menu.xml',
         'views/education_res_partner.xml',
         'views/education_application_reject.xml',

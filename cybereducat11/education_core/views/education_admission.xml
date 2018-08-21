@@ -89,25 +89,26 @@
                             <field name="blood_group" attrs="{'readonly': [('state', '=', 'done')]}"/>
                             <field name="mother_tongue" attrs="{'readonly': [('state', '=', 'done')]}"/>
                             <field name="father_name" attrs="{'readonly': [('state', '=', 'done')]}"/>
-                            <field name="guardian_name" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                            <field name="mother_name" attrs="{'readonly': [('state', '=', 'done')]}"/>
                         </group>
                         <group>
                             <field name="gender" attrs="{'readonly': [('state', '=', 'done')]}"/>
                             <field name="nationality" attrs="{'readonly': [('state', '=', 'done')]}"/>
                             <field name="religion_id" attrs="{'readonly': [('state', '=', 'done')]}"/>
-                            <field name="caste_id" attrs="{'readonly': [('state', '=', 'done')]}"/>
-                            <field name="mother_name" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                            <!--<field name="caste_id" attrs="{'readonly': [('state', '=', 'done')]}"/>-->
+                            <field name="guardian_relation" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                            <field name="guardian_name" attrs="{'readonly': [('state', '=', 'done')]}"/>
                         </group>
                     </group>
                     <group>
                         <separator string="Contact Address"/>
                         <group>
                             <div class="o_address_format">
-                                <field name="street" required="1" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('state', '=', 'done')]}"/>
-                                <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('state', '=', 'done')]}"/>
-                                <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('state', '=', 'done')]}"/>
-                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' attrs="{'readonly': [('state', '=', 'done')]}"/>
-                                <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                <field name="street" required="1" placeholder="House No / Village..." class="o_address_street" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                <field name="street2" placeholder="Road/ Post Office..." class="o_address_street" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                <field name="city" placeholder="Area/Thana" class="o_address_city" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                <field name="state_id" class="o_address_state" placeholder="City/Town/District" options='{"no_open": True}' attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                <field name="zip" placeholder="Post Code" class="o_address_zip" attrs="{'readonly': [('state', '=', 'done')]}"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('state', '=', 'done')]}"/>
                             </div>
                         </group>
@@ -117,11 +118,11 @@
                             <separator string="Permanent Address"/>
                             <group>
                                 <div class="o_address_format">
-                                    <field name="per_street" placeholder="Street..." class="o_address_street"/>
-                                    <field name="per_street2" placeholder="Street 2..." class="o_address_street"/>
-                                    <field name="per_city" placeholder="City" class="o_address_city"/>
-                                    <field name="per_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
-                                    <field name="per_zip" placeholder="ZIP" class="o_address_zip"/>
+                                    <field name="per_street" placeholder="House No / Village..." class="o_address_street"/>
+                                    <field name="per_street2" placeholder="Road/ Post Office..." class="o_address_street"/>
+                                    <field name="per_city" placeholder="Area/Thana" class="o_address_city"/>
+                                    <field name="per_state_id" class="o_address_state" placeholder="City/Town/District" options='{"no_open": True}'/>
+                                    <field name="per_zip" placeholder="Post Code" class="o_address_zip"/>
                                     <field name="per_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>
                             </group>
