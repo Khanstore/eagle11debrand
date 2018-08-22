@@ -13,8 +13,19 @@ class EducationExamValuation(models.Model):
     class_id = fields.Many2one('education.class', string='Class', required=True)
     division_id = fields.Many2one('education.class.division', string='Division', required=True)
     teachers_id = fields.Many2one('education.faculty', string='Evaluator')
-    mark = fields.Float(string='Max Mark', required=True)
-    pass_mark = fields.Float(string='Pass Mark', required=True)
+    mark = fields.Float(string='Max Mark', compute='calculate_marks')
+    pass_mark = fields.Float(string='Pass Mark', compute='calculate_marks')
+    tut_mark = fields.Integer('Tutorial Mark')
+    tut_pass_mark = fields.Integer('Tutorial Pass Mark')
+    subj_mark = fields.Integer('Subjective Mark')
+    subj_pass_mark = fields.Integer('Subjective Pass Mark')
+
+    obj_mark = fields.Integer('Objective Mark')
+    obj_pass_mark = fields.Integer('Objective Pass Mark')
+
+    prac_mark = fields.Integer('Practical Mark')
+    prac_pass_mark = fields.Integer('Practical Pass Mark')
+
     state = fields.Selection([('draft', 'Draft'), ('completed', 'Completed'), ('cancel', 'Canceled')], default='draft')
     valuation_line = fields.One2many('exam.valuation.line', 'valuation_id', string='Students')
     subject_id = fields.Many2one('education.subject', string='Subject', required=True)
@@ -24,6 +35,16 @@ class EducationExamValuation(models.Model):
                                     related='division_id.academic_year_id', store=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env['res.company']._company_default_get())
+
+    @api.onchange('tut_mark','tut_pass_mark','subj_mark','subj_pass_mark','obj_mark','obj_pass_mark','prac_mark','prac_pass_mark')
+    def calculate_marks(self):
+        for rec in self:
+            rec.mark=rec.tut_mark+rec.subj_mark+rec.obj_mark+rec.subj_mark+rec.prac_mark
+            rec.pass_mark=rec.tut_pass_mark+rec.subj_pass_mark+rec.obj_pass_mark+rec.subj_pass_mark+rec.prac_pass_mark
+
+
+
+
 
     @api.onchange('class_id')
     def onchange_class_id(self):

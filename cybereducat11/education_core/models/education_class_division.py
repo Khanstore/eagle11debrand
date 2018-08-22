@@ -7,16 +7,26 @@ class educationClassSection(models.Model):
     _name='education.class.section'
     _description='Sections'
     name=fields.Char('Section')
+    level_ids=fields.Many2many('education.class',column1='level_ids',column2='section_ids')
     classes_ids=fields.Many2many('education.class','section_ids',string='Classes')
 class EducationClass(models.Model):
     _name = 'education.class'
     _description = "Standard"
     sequence=fields.Integer("Sequence")
-    section_ids=fields.Many2many('education.class.section','classes_ids',string='Sections')
+    section_ids=fields.Many2many('education.class.section',column2='level_ids',column1='section_ids',string='Sections')
     name = fields.Char(string='Name', required=True, help="Enter the Name of the Class")
     code = fields.Char(string='Code', required=True, help="Enter the Code of the Class")
     syllabus_ids = fields.One2many('education.syllabus', 'class_id')
-    division_ids = fields.One2many('education.division', 'class_id')
+    # division_ids = fields.Many2many('education.division''class_id', 'class_id')
+    division_ids=fields.Many2many('education.division','class_dev_rel','division_ids','classes_ids')
+    division_count=fields.Integer('Total Group',compute='_division_count')
+    section_count=fields.Integer('Total Sections',compute='_division_count')
+    @api.multi
+    def _division_count(self):
+        """Return the count of the documents provided"""
+        for rec in self:
+            rec.divisiont_count = len(self.division_ids)
+            rec.section_count = len(self.section_ids)
 
 
 class EducationDivision(models.Model):
@@ -24,9 +34,10 @@ class EducationDivision(models.Model):
     _description = "Standard Division"
 
     name = fields.Char(string='Name', required=True, help="Enter the Name of the Division")
+    code = fields.Char(string='Code', required=True, help="Enter the Code of the Division")
     strength = fields.Integer(string='Class Strength', help="Total strength of the class")
     faculty_id = fields.Many2one('education.faculty', string='Class Faculty', help="Class teacher/Faculty")
-    class_id = fields.Many2one('education.class', string='Class')
+    classes_ids = fields.Many2many('education.class','class_dev_rel','classes_ids','division_ids', string='Class')
 
 
 class EducationClassDivision(models.Model):
@@ -39,7 +50,19 @@ class EducationClassDivision(models.Model):
         # res = super(EducationClassDivision, self).create(vals)
         class_id = self.env['education.class'].browse(vals['class_id'])
         division_id = self.env['education.division'].browse(vals['division_id'])
-        name = str(class_id.name + '-' + division_id.name)
+        section_id = self.env['education.class.section'].browse(vals['section_id'])
+        batch = self.env['education.academic.year'].browse(vals['academic_year_id'])
+        className=''
+        divisionName=''
+        sectionName=''
+        batchName=batch.ay_code
+        if class_id.id>0:
+            className=class_id.name
+        if division_id.id>0:
+            divisionName=division_id.name
+        if section_id.id>0:
+            sectionName=section_id.name
+        name = str(className + '-' + divisionName+ '-' + sectionName+ '-' + batchName)
         vals['name'] = name
         return super(EducationClassDivision, self).create(vals)
 
@@ -70,16 +93,16 @@ class EducationClassDivision(models.Model):
             })
 
     name = fields.Char(string='Name', readonly=True)
-    actual_strength = fields.Integer(string='Class Strength', help="Total strength of the class")
+    actual_strength = fields.Integer(string='Max student No', help="Total strength of the class")
     faculty_id = fields.Many2one('education.faculty', string='Class Faculty', help="Class teacher/Faculty")
     academic_year_id = fields.Many2one('education.academic.year', string='Academic Year',
                                        help="Select the Academic Year", required=True)
     class_id = fields.Many2one('education.class', string='Class', required=True,
                                help="Select the Class")
-    division_id = fields.Many2one('education.division', string='Division', required=True,
-                                  help="Select the Division")
+    division_id = fields.Many2one('education.division', string='Division',help="Select the Division")
+    section_id = fields.Many2one('education.class.section', string='Section', help="Select the Section")
     student_ids = fields.One2many('education.student', 'class_id', string='Students')
-    amenities_ids = fields.One2many('education.class.amenities', 'class_id', string='Amenities')
+    amenities_ids = fields.Char( string='Amenities')
     student_count = fields.Integer(string='Students Count', compute='_get_student_count')
 
     @api.constrains('actual_strength')
@@ -87,8 +110,11 @@ class EducationClassDivision(models.Model):
         """Return Validation error if the students strength is not a non-zero number"""
         for rec in self:
             if rec.actual_strength <= 0:
-                raise ValidationError(_('Strength must be a Non-Zero value'))
+                raise ValidationError(_('Max Student No must be greater than Zero'))
 
+    _sql_constraints=[
+        ('ad_no', 'unique(name)', "class should be unique!"),
+    ]
 
 class EducationClassDivisionHistory(models.Model):
     _name = 'education.class.history'
@@ -109,7 +135,7 @@ class EducationClassAmenities(models.Model):
     name = fields.Many2one('education.amenities', string="Amenities",
                            help="Select the amenities in class room")
     qty = fields.Float(string='Quantity', help="The quantity of the amenities", default=1.0)
-    class_id = fields.Many2one('education.class.division', string="Class Room")
+    room_id = fields.Many2one('education.rooms', string="Class Room")
 
     @api.constrains('qty')
     def check_qty(self):

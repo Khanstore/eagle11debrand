@@ -24,7 +24,7 @@ class AccountFiscalPosition(models.Model):
     note = fields.Text('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
-    country_id = fields.Many2one('res.country', string='Country',
+    country_id = fields.Many2one('res.country', string='Country',default=19,
         help="Apply only if delivery or invoicing country match.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
         help="Apply only if delivery or invocing country match the group.")

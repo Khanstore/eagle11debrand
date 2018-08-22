@@ -9,6 +9,8 @@
                 <field name="sequence"/>
                 <field name="name"/>
                 <field name="code"/>
+                <field name="section_ids"/>
+                <field name="division_ids"/>
             </tree>
         </field>
     </record>
@@ -18,15 +20,27 @@
         <field name="model">education.class</field>
         <field name="arch" type="xml">
             <form string="Standard">
+                <div class="oe_button_box" name="button_box">
+                    <button name="view_divisions" type="object" widget="statinfo" class="oe_stat_button" icon="fa-user" >
+                        <field name="division_count" widget="statinfo" string="Groups"/>
+                    </button>
+                    <button name="view_section" type="object" widget="statinfo" class="oe_stat_button" icon="fa-list-ol" >
+                            <field name="section_count" widget="statinfo" string="Sections"/>
+                    </button>
+                </div>
                 <group >
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="code"/>
                 </group>
-                <group string="Sections">
-                     <field name="section_ids" nolabel="True" />
+                <group>
+                    <group string="divisions">
+                         <field name="division_ids" nolabel="1" />
+                    </group>
+                    <group string="Sections">
+                         <field name="section_ids" nolabel="1" />
+                    </group>
                 </group>
-
                 <notebook>
                         <page string="Syllabus">
                             <field name="syllabus_ids" nolabel="1">
