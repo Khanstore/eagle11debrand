@@ -138,6 +138,7 @@ class EducationExamValuation(models.Model):
                 result = result_obj.create(result_data)
                 result_line_data = {
                     'name': self.name,
+                    'tut_mark': self.students.tut_mark,
                     'subject_id': self.subject_id.id,
                     'max_mark': self.mark,
                     'pass_mark': self.pass_mark,

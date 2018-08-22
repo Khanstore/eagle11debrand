@@ -67,7 +67,7 @@
                                     <tree create="0" editable="bottom">
                                         <field name="student_id" invisible="1"/>
                                         <field name="student_name" readonly="1"/>
-                                        <field name="tut_mark" attrs="{'invisible': [('valuation_id.tut_mark', '=', 0)]}"/>
+                                        <field name="tut_mark" />
                                         <field name="sub_mark"/>
                                         <field name="ob_mark"/>
                                         <field name="prac_mark"/>
