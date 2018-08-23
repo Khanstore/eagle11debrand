@@ -45,6 +45,11 @@ class EducationExamResults(models.Model):
 class ResultsSubjectLine(models.Model):
     _name = 'results.subject.line'
 
+    tut_mark = fields.Float(string='Tutorial')
+    subj_mark = fields.Float(string='Subjective')
+    obj_mark = fields.Float(string='Objective')
+    prac_mark = fields.Float(string='Practical')
+
     name = fields.Char(string='Name')
     subject_id = fields.Many2one('education.subject', string='Subject')
     max_mark = fields.Float(string='Max Mark')

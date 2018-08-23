@@ -138,7 +138,10 @@ class EducationExamValuation(models.Model):
                 result = result_obj.create(result_data)
                 result_line_data = {
                     'name': self.name,
-                    'tut_mark': self.students.tut_mark,
+                    'tut_mark': students.tut_mark,
+                    'obj_mark': students.obj_mark,
+                    'subj_mark': students.subj_mark,
+                    'prac_mark': students.prac_mark,
                     'subject_id': self.subject_id.id,
                     'max_mark': self.mark,
                     'pass_mark': self.pass_mark,
@@ -157,6 +160,10 @@ class EducationExamValuation(models.Model):
                     'subject_id': self.subject_id.id,
                     'max_mark': self.mark,
                     'pass_mark': self.pass_mark,
+                    'tut_mark': students.tut_mark,
+                    'obj_mark': students.obj_mark,
+                    'subj_mark': students.subj_mark,
+                    'prac_mark': students.prac_mark,
                     'mark_scored': students.mark_scored,
                     'pass_or_fail': students.pass_or_fail,
                     'result_id': search_result.id,
@@ -194,8 +201,8 @@ class StudentsExamValuationLine(models.Model):
     student_name = fields.Char(string='Students')
     mark_scored = fields.Float(string='Mark',compute='calculate_marks')
     tut_mark=fields.Float(string='Tutorial')
-    sub_mark=fields.Float(string='Subjective')
-    ob_mark=fields.Float(string='Objective')
+    subj_mark=fields.Float(string='Subjective')
+    obj_mark=fields.Float(string='Objective')
     prac_mark=fields.Float(string='Practical')
     pass_or_fail = fields.Boolean(string='Pass/Fail')
     valuation_id = fields.Many2one('education.exam.valuation', string='Valuation Id')
@@ -206,12 +213,20 @@ class StudentsExamValuationLine(models.Model):
     def onchange_mark_scored(self):
         if self.mark_scored > self.valuation_id.mark:
             raise UserError(_('Mark Scored must be less than Max Mark'))
-        if self.mark_scored >= self.valuation_id.pass_mark:
-            self.pass_or_fail = True
-        else:
-            self.pass_or_fail = False
+        # if self.mark_scored >= self.valuation_id.pass_mark:
+        #     self.pass_or_fail = True
+        # else:
+        #     self.pass_or_fail = False
+        if self.tut_mark >= self.valuation_id.tut_pass_mark and \
+                self.prac_mark >= self.valuation_id.prac_pass_mark and \
+                self.subj_mark >= self.valuation_id.subj_pass_mark and \
+                self.obj_mark >= self.valuation_id.obj_pass_mark :
+           self.pass_or_fail=True
+        else :
+            self.pass_or_fail=False
+
     @api.multi
-    @api.onchange('tut_mark','sub_mark','ob_mark','prac_mark')
+    @api.onchange('tut_mark','subj_mark','obj_mark','prac_mark')
     def calculate_marks(self):
         for rec in self:
-            rec.mark_scored=rec.tut_mark+ rec.ob_mark+rec.sub_mark+rec.prac_mark
+            rec.mark_scored=rec.tut_mark+ rec.obj_mark+rec.subj_mark+rec.prac_mark
