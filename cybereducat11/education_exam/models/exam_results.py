@@ -49,7 +49,8 @@ class ResultsSubjectLine(models.Model):
     subj_mark = fields.Float(string='Subjective')
     obj_mark = fields.Float(string='Objective')
     prac_mark = fields.Float(string='Practical')
-
+    grade=fields.Char('Grade',compute='_compute_grade')
+    score=fields.Float('GP')
     name = fields.Char(string='Name')
     subject_id = fields.Many2one('education.subject', string='Subject')
     max_mark = fields.Float(string='Max Mark')
@@ -66,3 +67,14 @@ class ResultsSubjectLine(models.Model):
                                     related='division_id.academic_year_id', store=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env['res.company']._company_default_get())
+
+    @api.multi
+    @api.depends('mark_scored')
+    def _compute_grade(self):
+        for record in self:
+            per_obtained=(record.mark_scored * 100)/record.max_mark
+            grades = self.env['education.result.grading']
+            for gr in grades:
+                if gr.min_per <= per_obtained and \
+                        gr.max_per >= per_obtained:
+                    record.grade = gr.result

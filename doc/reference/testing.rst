@@ -94,7 +94,7 @@ Running tests
 -------------
 
 Tests are automatically run when installing or updating modules if
-:option:`--test-enable <odoo-bin --test-enable>` was enabled when starting the
+:option:`--test-enable <eagle-exe --test-enable>` was enabled when starting the
 Odoo server.
 
 As of Odoo 8, running tests outside of the install/update cycle is not

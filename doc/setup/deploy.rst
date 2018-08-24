@@ -31,7 +31,7 @@ the website page or perform the operation. If multi-tenancy is not used that is 
 issue, there's only one database to use, but if there are multiple databases
 accessible Odoo needs a rule to know which one it should use.
 
-That is one of the purposes of :option:`--db-filter <odoo-bin --db-filter>`:
+That is one of the purposes of :option:`--db-filter <eagle-exe --db-filter>`:
 it specifies how the database should be selected based on the hostname (domain)
 that is being requested. The value is a `regular expression`_, possibly
 including the dynamically injected hostname (``%h``) or the first subdomain
@@ -66,7 +66,7 @@ in ``/etc/odoo.conf`` set:
   dbfilter = ^%d$
 
 .. note::
-  Setting a proper :option:`--db-filter <odoo-bin --db-filter>` is an important part
+  Setting a proper :option:`--db-filter <eagle-exe --db-filter>` is an important part
   of securing your deployment.
   Once it is correctly working and only matching a single database per hostname, it
   is strongly recommended to block access to the database manager screens,
@@ -190,7 +190,7 @@ increases stability, makes somewhat better use of computing resources and can
 be better monitored and resource-restricted.
 
 * Multiprocessing is enabled by configuring :option:`a non-zero number of
-  worker processes <odoo-bin --workers>`, the number of workers should be based
+  worker processes <eagle-exe --workers>`, the number of workers should be based
   on the number of cores in the machine (possibly with some room for cron
   workers depending on how much cron work is predicted)
 * Worker limits can be configured based on the hardware configuration to avoid
@@ -219,12 +219,12 @@ LiveChat
 --------
 
 In multiprocessing, a dedicated LiveChat worker is automatically started and
-listening on :option:`the longpolling port <odoo-bin --longpolling-port>` but
+listening on :option:`the longpolling port <eagle-exe --longpolling-port>` but
 the client will not connect to it.
 
 Instead you must have a proxy redirecting requests whose URL starts with
 ``/longpolling/`` to the longpolling port. Other request should be proxied to
-the :option:`normal HTTP port <odoo-bin --http-port>`
+the :option:`normal HTTP port <eagle-exe --http-port>`
 
 To achieve such a thing, you'll need to deploy a reverse proxy in front of Odoo,
 like nginx or apache. When doing so, you'll need to forward some more http Headers
@@ -267,7 +267,7 @@ authentication information in cleartext. This means a secure deployment of
 Odoo must use HTTPS\ [#switching]_. SSL termination can be implemented via
 just about any SSL termination proxy, but requires the following setup:
 
-* Enable Odoo's :option:`proxy mode <odoo-bin --proxy-mode>`. This should only be enabled when Odoo is behind a reverse proxy
+* Enable Odoo's :option:`proxy mode <eagle-exe --proxy-mode>`. This should only be enabled when Odoo is behind a reverse proxy
 * Set up the SSL termination proxy (`Nginx termination example`_)
 * Set up the proxying itself (`Nginx proxying example`_)
 * Your SSL termination proxy should also automatically redirect non-secure
@@ -370,12 +370,12 @@ Cron Workers
 
 To run cron jobs for an Odoo deployment as a WSGI application requires
 
-* A classical Odoo (run via ``odoo-bin``)
+* A classical Odoo (run via ``eagle-exe``)
 * Connected to the database in which cron jobs have to be run (via
-  :option:`odoo-bin -d`)
+  :option:`eagle-exe -d`)
 * Which should not be exposed to the network. To ensure cron runners are not
   network-accessible, it is possible to disable the built-in HTTP server
-  entirely with :option:`odoo-bin --no-http` or setting ``http_enable = False``
+  entirely with :option:`eagle-exe --no-http` or setting ``http_enable = False``
   in the configuration file
 
 LiveChat
@@ -399,7 +399,7 @@ The solutions to support livechat/motifications in a WSGI application are:
   the cron instance.
 * Deploy an evented Odoo via ``odoo-gevent`` and proxy requests starting
   with ``/longpolling/`` to
-  :option:`the longpolling port <odoo-bin --longpolling-port>`.
+  :option:`the longpolling port <eagle-exe --longpolling-port>`.
 
 Serving Static Files
 ====================
@@ -446,20 +446,20 @@ security-related topics:
   default logins and passwords that can be used to get into your systems and cause significant
   trouble, even on staging/dev systems.
 
-- Use appropriate database filters ( :option:`--db-filter <odoo-bin --db-filter>`)
+- Use appropriate database filters ( :option:`--db-filter <eagle-exe --db-filter>`)
   to restrict the visibility of your databases according to the hostname.
   See :ref:`db_filter`.
-  You may also use :option:`-d <odoo-bin -d>` to provide your own (comma-separated)
+  You may also use :option:`-d <eagle-exe -d>` to provide your own (comma-separated)
   list of available databases to filter from, instead of letting the system fetch
   them all from the database backend.
 
 - Once your ``db_name`` and ``db_filter`` are configured and only match a single database
   per hostname, you should set ``list_db`` configuration option to ``False``, to prevent
   listing databases entirely, and to block access to the database management screens
-  (this is also exposed as the :option:`--no-database-list <odoo-bin --no-database-list>`
+  (this is also exposed as the :option:`--no-database-list <eagle-exe --no-database-list>`
   command-line option)
 
-- Make sure the PostgreSQL user (:option:`--db_user <odoo-bin --db_user>`) is *not* a super-user,
+- Make sure the PostgreSQL user (:option:`--db_user <eagle-exe --db_user>`) is *not* a super-user,
   and that your databases are owned by a different user. For example they could be owned by
   the ``postgres`` super-user if you are using a dedicated non-privileged ``db_user``.
   See also :ref:`setup/deploy/odoo`.
@@ -475,7 +475,7 @@ security-related topics:
   in order to prevent eavesdropping on cleartext communications. SSL certificates are
   cheap, and many free options exist.
   Configure the web proxy to limit the size of requests, set appropriate timeouts,
-  and then enable the :option:`proxy mode <odoo-bin --proxy-mode>` option.
+  and then enable the :option:`proxy mode <eagle-exe --proxy-mode>` option.
   See also :ref:`https_proxy`.
 
 - If you need to allow remote SSH access to your servers, make sure to set a strong password

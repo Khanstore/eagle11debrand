@@ -59,7 +59,7 @@ def py2exe_options():
         import py2exe
         return {
             'console': [
-                {'script': 'odoo-bin', 'icon_resources': [
+                {'script': 'eagle-exe', 'icon_resources': [
                     (1, join('setup', 'win32', 'static', 'pixmaps', 'openerp-icon.ico'))
                 ]},
             ],
