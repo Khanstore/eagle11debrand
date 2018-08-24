@@ -73,8 +73,9 @@ class ResultsSubjectLine(models.Model):
     def _compute_grade(self):
         for record in self:
             per_obtained=(record.mark_scored * 100)/record.max_mark
-            grades = self.env['education.result.grading']
+            grades = self.env['education.result.grading'].search([['id', '>', '0']])
             for gr in grades:
                 if gr.min_per <= per_obtained and \
                         gr.max_per >= per_obtained:
                     record.grade = gr.result
+                    record.score = gr.score
