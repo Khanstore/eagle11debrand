@@ -15,7 +15,8 @@
                                 <center>
                                     <div class="col-xs-8" style="margin:auto">
                                         <table class="table table-condensed" style="border: 3px solid black !important;">
-                                            <tr>
+                                          <t t-foreach="o" t-as="obj">
+                                                <tr>
                                                 <td width="40%">
                                                     <p style="text-align:center;">
                                                         <strong><span t-field="o.name"/></strong>
@@ -38,6 +39,7 @@
                                                     </table>
                                                 </td>
                                             </tr>
+                                           </t>
                                         </table>
                                     </div>
                                 </center>
