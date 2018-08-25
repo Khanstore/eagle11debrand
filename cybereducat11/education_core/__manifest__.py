@@ -38,6 +38,7 @@
         'reports/student_id_card.xml',
         'reports/student_application_report.xml',
         'reports/faculty_id_card.xml',
+        'reports/exam_marksheet.xml',
     ],
     'demo': [
         'demo/education_data.xml',

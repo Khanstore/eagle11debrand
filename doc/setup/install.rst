@@ -326,7 +326,7 @@ Source installation requires manually installing dependencies:
       then click :guilabel:`OK`.
 
       The user and password must be passed to Odoo using either the
-      :option:`-w <odoo-bin -w>` and :option:`-r <odoo-bin -r>` options or
+      :option:`-w <eagle-exe -w>` and :option:`-r <eagle-exe -r>` options or
       :ref:`the configuration file <reference/cmdline/config>`
 
 * Python dependencies listed in the :file:`requirements.txt` file.
@@ -462,7 +462,7 @@ if you wish to get access), you can use this command to fetch the addons:
 Running Odoo
 ------------
 
-Once all dependencies are set up, Odoo can be launched by running ``odoo-bin``.
+Once all dependencies are set up, Odoo can be launched by running ``eagle-exe``.
 
 .. tip:: For the Enterprise edition, you must specify the :file:`enterprise`
     addons folder when starting your server. You can do so by providing the path
@@ -490,7 +490,7 @@ Under Windows a typical way to execute odoo would be:
 
 .. code-block:: doscon
 
-    C:\YourOdooPath> python3 odoo-bin -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
+    C:\YourOdooPath> python3 eagle-exe -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
 
 Where ``odoo``, ``odoo`` are the postgresql login and password,
 ``../mymodules`` a directory with additional addons and ``mydb`` the default
@@ -500,7 +500,7 @@ Under Unix a typical way to execute odoo would be:
 
 .. code-block:: console
 
-    $ ./odoo-bin --addons-path=addons,../mymodules --db-filter=mydb$
+    $ ./eagle-exe --addons-path=addons,../mymodules --db-filter=mydb$
 
 Where ``../mymodules`` is a directory with additional addons and ``mydb`` the
 default db to serve on localhost:8069

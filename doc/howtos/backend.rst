@@ -20,13 +20,13 @@ Business logic and extension is generally performed on the server side,
 although supporting client features (e.g. new data representation such as
 interactive maps) can be added to the client.
 
-In order to start the server, simply invoke the command :ref:`odoo-bin
+In order to start the server, simply invoke the command :ref:`eagle-exe
 <reference/cmdline>` in the shell, adding the full path to the file if
 necessary:
 
 .. code:: bash
 
-    odoo-bin
+    eagle-exe
 
 The server is stopped by hitting ``Ctrl-C`` twice from the terminal, or by
 killing the corresponding OS process.
@@ -67,7 +67,7 @@ Module structure
 ----------------
 
 Each module is a directory within a *module directory*. Module directories
-are specified by using the :option:`--addons-path <odoo-bin --addons-path>`
+are specified by using the :option:`--addons-path <eagle-exe --addons-path>`
 option.
 
 .. tip::
@@ -89,13 +89,13 @@ might contain::
 
     from . import mymodule
 
-Odoo provides a mechanism to help set up a new module, :ref:`odoo-bin
+Odoo provides a mechanism to help set up a new module, :ref:`eagle-exe
 <reference/cmdline/server>` has a subcommand :ref:`scaffold
 <reference/cmdline/scaffold>` to create an empty module:
 
 .. code-block:: console
 
-    $ odoo-bin scaffold <module name> <where to put it>
+    $ eagle-exe scaffold <module name> <where to put it>
 
 The command creates a subdirectory for your module, and automatically creates a
 bunch of standard files for a module. Most of them simply contain commented code
@@ -108,7 +108,7 @@ or XML. The usage of most of those files will be explained along this tutorial.
 
     .. only:: solutions
 
-        #. Invoke the command ``odoo-bin scaffold openacademy addons``.
+        #. Invoke the command ``eagle-exe scaffold openacademy addons``.
         #. Adapt the manifest file to your module.
         #. Don't bother about the other files.
 
@@ -262,7 +262,7 @@ be declared in the ``'data'`` list (always loaded) or in the ``'demo'`` list
     installed or updated.
 
     After making some changes, do not forget to use
-    :ref:`odoo-bin -u openacademy <reference/cmdline>` to save the changes
+    :ref:`eagle-exe -u openacademy <reference/cmdline>` to save the changes
     to your database.
 
 Actions and Menus

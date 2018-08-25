@@ -3,7 +3,7 @@
 .. _reference/cmdline:
 
 ================================
-Command-line interface: odoo-bin
+Command-line interface: eagle-exe
 ================================
 
 .. _reference/cmdline/server:
@@ -11,7 +11,7 @@ Command-line interface: odoo-bin
 Running the server
 ==================
 
-.. program:: odoo-bin
+.. program:: eagle-exe
 
 .. option:: -d <database>, --database <database>
 
@@ -177,19 +177,19 @@ database
     
     .. code-block:: bash
 
-        odoo-bin --db-filter ^11.*$
+        eagle-exe --db-filter ^11.*$
 
     Restrict access to databases whose name starts with 11
 
     .. code-block:: bash
 
-        odoo-bin --database 11firstdatabase,11seconddatabase
+        eagle-exe --database 11firstdatabase,11seconddatabase
 
     Restrict access to only two databases, 11firstdatabase and 11seconddatabase
     
     .. code-block:: bash
 
-        odoo-bin --database 11firstdatabase,11seconddatabase -u base
+        eagle-exe --database 11firstdatabase,11seconddatabase -u base
 
     Restrict access to only two databases, 11firstdatabase and 11seconddatabase,
     and update base module on one database: 11firstdatabase
@@ -198,7 +198,7 @@ database
     
     .. code-block:: bash
 
-        odoo-bin --db-filter ^11.*$ --database 11firstdatabase,11seconddatabase -u base
+        eagle-exe --db-filter ^11.*$ --database 11firstdatabase,11seconddatabase -u base
         
     Restrict access to databases whose name starts with 11,
     and update base module on one database: 11firstdatabase
@@ -294,7 +294,7 @@ customize the amount of logging output
 
     .. code-block:: console
 
-        $ odoo-bin --log-handler :DEBUG --log-handler werkzeug:CRITICAL --log-handler odoo.fields:WARNING
+        $ eagle-exe --log-handler :DEBUG --log-handler werkzeug:CRITICAL --log-handler odoo.fields:WARNING
 
 .. option:: --log-request
 
@@ -383,14 +383,14 @@ emails
 Scaffolding
 ===========
 
-.. program:: odoo-bin scaffold
+.. program:: eagle-exe scaffold
 
 Scaffolding is the automated creation of a skeleton structure to simplify
 bootstrapping (of new modules, in the case of Odoo). While not necessary it
 avoids the tedium of setting up basic structures and looking up what all
 starting requirements are.
 
-Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
+Scaffolding is available via the :command:`eagle-exe scaffold` subcommand.
 
 .. option:: -t <template>
 
@@ -412,7 +412,7 @@ Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
 Configuration file
 ==================
 
-.. program:: odoo-bin
+.. program:: eagle-exe
 
 Most of the command-line options can also be specified via a configuration
 file. Most of the time, they use similar names with the prefix ``-`` removed
@@ -432,8 +432,8 @@ Some conversions don't match the pattern:
   from configuration files
 
 The default configuration file is :file:`{$HOME}/.odoorc` which
-can be overridden using :option:`--config <odoo-bin -c>`. Specifying
-:option:`--save <odoo-bin -s>` will save the current configuration state back
+can be overridden using :option:`--config <eagle-exe -c>`. Specifying
+:option:`--save <eagle-exe -s>` will save the current configuration state back
 to that file.
 
 .. _jinja2: http://jinja.pocoo.org
