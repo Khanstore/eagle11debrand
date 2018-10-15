@@ -69,7 +69,7 @@ class acdemicTranscripts(models.AbstractModel):
         student=student_history.student_id
         marks=self.env['results.subject.line'].search([('exam_id','=',exam.id),('subject_id','=',subject.id),('student_id','=',student.id)])
         return marks
-    
+
     def get_exam_obtained_total(self,exam,student_history,optional):
         student = student_history.student_id
         marks = self.env['results.subject.line'].search(

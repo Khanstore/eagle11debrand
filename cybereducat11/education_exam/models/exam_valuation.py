@@ -109,8 +109,9 @@ class EducationExamValuation(models.Model):
 
 
         valuation_line_obj = self.env['exam.valuation.line']
-        history = self.env['education.class.history'].search([('level','=',self.class_id.id),('section','=',self.division_id.id),
-                                                              '|',('compulsory_subjects','=',self.subject_id.id),'|',('selective_subjects','=',self.subject_id.id),('optional_subjects','=',self.subject_id.id)])     #division_id.student_ids
+        history = self.env['education.class.history'].search([('class_id','=',self.division_id.id),
+                                                              '|',('compulsory_subjects','=',self.subject_id.id),'|',('selective_subjects','=',self.subject_id.id),
+                                                              ('optional_subjects','=',self.subject_id.id)])     #division_id.student_ids
         if len(history) < 1:
             raise UserError(_('There are no students in this Division'))
         for student in history:
