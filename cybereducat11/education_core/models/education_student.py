@@ -35,6 +35,8 @@ class EducationStudent(models.Model):
             recs = self.search([('name', operator, name)] + (args or []), limit=limit)
             if not recs:
                 recs = self.search([('ad_no', operator, name)] + (args or []), limit=limit)
+            if not recs:
+                recs = self.search([('student_id', operator, name)] + (args or []), limit=limit)
             return recs.name_get()
         return super(EducationStudent, self).name_search(name, args=args, operator=operator, limit=limit)
 
@@ -49,6 +51,9 @@ class EducationStudent(models.Model):
         'res.partner', string='Partner', required=True, ondelete="cascade")
     middle_name = fields.Char(string='Middle Name')
     last_name = fields.Char(string='Last Name')
+    name_b = fields.Char("নাম")
+    middle_name_b = fields.Char("নামের মধ্যাংশ")
+    last_name_b = fields.Char("নামের শেষাংশ")
     application_no = fields.Char(string="Application No")
     date_of_birth = fields.Date(string="Date Of birth", requird=True)
     guardian_relation = fields.Many2one('gurdian.student.relation', string="Relation to Guardian", required=True,
@@ -56,9 +61,9 @@ class EducationStudent(models.Model):
     guardian_name = fields.Many2one('res.partner', string="Guardian", domain=[('is_parent', '=', True)])
     # father_name = fields.Char(string="Father")
     # mother_name = fields.Char(string="Mother")
-    father_name = fields.Many2one('res.partner', string="Father", domain=[('is_parent', '=', True)], required=True,
+    father_name = fields.Many2one('res.partner', string="Father", domain=[('is_parent', '=', True),('gender', '!=', 'female')], required=True,
                                   help="Proud to say my father is")
-    mother_name = fields.Many2one('res.partner', string="Mother", domain=[('is_parent', '=', True)], required=True,
+    mother_name = fields.Many2one('res.partner', string="Mother", domain=[('is_parent', '=', True),('gender', '!=', 'male')], required=True,
                                   help="My mother name is")
     class_id = fields.Many2one('education.class.division', string="Class")
     admission_class = fields.Many2one('education.class', string="Admission Class")
@@ -76,7 +81,7 @@ class EducationStudent(models.Model):
     per_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
     per_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict',default=19)
     medium = fields.Many2one('education.medium', string="Medium", required=True)
-    sec_lang = fields.Many2one('education.subject', string="Second language", required=True, domain=[('is_language', '=', True)])
+    sec_lang = fields.Many2one('education.subject', string="Second language", required=False, domain=[('is_language', '=', True)])
     mother_tongue = fields.Many2one('education.mother.tongue', string="Mother Tongue", required=True, domain=[('is_language', '=', True)])
     caste_id = fields.Many2one('religion.caste', string="Caste")
     religion_id = fields.Many2one('religion.religion', string="Religion")
@@ -84,7 +89,13 @@ class EducationStudent(models.Model):
     nationality = fields.Many2one('res.country', string='Nationality', ondelete='restrict',default=19,)
     application_id = fields.Many2one('education.application', string="Application No")
     class_history_ids = fields.One2many('education.class.history', 'student_id', string="Application No")
-
+    roll_no=fields.Integer('Roll No')
+    student_id=fields.Char('Student Id')
+    section_id=fields.Integer('section_id')
+    group_id=fields.Integer('Group')
+    import_roll_no=fields.Integer('Roll No')
     _sql_constraints = [
         ('ad_no', 'unique(ad_no)', "Another Student already exists with this admission number!"),
+        ('roll_no', 'unique(section_id,roll_no)', "Another Student already exists with this Roll Number!"),
+        ('unique_student_id', 'unique(student_id)', 'Student Id must be unique'),
     ]

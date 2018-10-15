@@ -13,10 +13,16 @@ class ApplicationClassDetails(models.Model):
                                   help="Student Assigning is done by")
     class_id = fields.Many2one('education.class.division', string="Class", required=True,
                                help="Students are alloted to this Class")
-
     @api.multi
     def action_assign_class(self):
         """Assign the class for the selected students after admission by the faculties"""
+        # search max roll no of the class
+        max_roll=self.env['education.class.history'].search([],order='roll_no asc', limit=1)
+        if max_roll.roll_no:
+            next_roll=max_roll.roll_no
+        else:
+            next_roll=0
+
         for rec in self:
             assign_request = self.env['education.student.class'].browse(self.env.context.get('active_ids'))
             assign_request.get_student_list()
@@ -24,8 +30,20 @@ class ApplicationClassDetails(models.Model):
                 raise ValidationError(_('No Student Lines'))
             for line in assign_request.student_list:
                 line.student_id.class_id = rec.class_id.id
+                #create student history
+                next_roll=next_roll+1
+                self.env['education.class.history'].create({'academic_year_id': rec.class_id.academic_year_id.id,
+                                                            'class_id': rec.class_id.id,
+                                                            'student_id':line.student_id.id,
+                                                            'roll_no': next_roll
+                                                            })
+
+
             assign_request.write({
                 'state': 'done',
                 'admitted_class': rec.class_id.id,
                 'assigned_by': rec.assigned_by.id
             })
+
+
+

@@ -32,30 +32,30 @@
         <record id="education_subject_data1" model="education.subject">
             <field name="name">Mathematics</field>
             <field name="code">M1</field>
-            <field name="type">compulsory</field>
-            <field name="weightage">2</field>
+            <!--<field name="type">compulsory</field>-->
+            <!--<field name="weightage">2</field>-->
         </record>
 
         <record id="education_subject_data2" model="education.subject">
             <field name="name">Science</field>
             <field name="code">SC1</field>
-            <field name="type">compulsory</field>
-            <field name="weightage">3</field>
+            <!--<field name="type">compulsory</field>-->
+            <!--<field name="weightage">3</field>-->
         </record>
 
         <record id="education_subject_data3" model="education.subject">
             <field name="name">English</field>
-            <field name="is_language">1</field>
+            <!--<field name="is_language">1</field>-->
             <field name="code">EN1</field>
-            <field name="type">compulsory</field>
-            <field name="weightage">1</field>
+            <!--<field name="type">compulsory</field>-->
+            <!--<field name="weightage">1</field>-->
         </record>
 
         <record id="syllabus_data" model="education.syllabus">
             <field name="name">CBSE</field>
             <field name="subject_id" ref="education_subject_data1"/>
             <field name="class_id" ref="education_class_data"/>
-            <field name="total_hours">50</field>
+            <!--<field name="total_hours">50</field>-->
             <field name="description">50 Hours of class is necessary"</field>
         </record>
 
@@ -148,7 +148,7 @@
             <field name="medium" ref="education_medium_data"/>
             <field name="admission_class" ref="education_class_data"/>
             <field name="academic_year_id" ref="education_academic_year_data"/>
-            <field name="sec_lang" ref="education_subject_data3"/>
+            <!--<field name="sec_lang" ref="education_subject_data3"/>-->
             <field name="father_name">Daniel George</field>
             <field name="mother_name">Lissa Abraham</field>
             <field name="guardian_name" ref="education_parent_data"/>
@@ -170,7 +170,7 @@
             <field name="medium" ref="education_medium_data"/>
             <field name="admission_class" ref="education_class_data"/>
             <field name="academic_year_id" ref="education_academic_year_data"/>
-            <field name="sec_lang" ref="education_subject_data3"/>
+            <!--<field name="sec_lang" ref="education_subject_data3"/>-->
             <field name="father_name">Joseph Alex</field>
             <field name="mother_name">Smruthi K</field>
             <field name="guardian_name" ref="education_parent_data2"/>
@@ -205,7 +205,7 @@
             <field name="medium" ref="education_medium_data"/>
             <field name="class_id" ref="class_division_data"/>
             <field name="admission_class" ref="education_class_data"/>
-            <field name="sec_lang" ref="education_subject_data3"/>
+            <!--<field name="sec_lang" ref="education_subject_data3"/>-->
             <field name="father_name">Joseph Alex</field>
             <field name="mother_name">Smruthi K</field>
             <field name="guardian_name" ref="education_parent_data2"/>
@@ -233,6 +233,8 @@
             <field name="connect_id" ref="assign_class_data"/>
             <field name="student_id" ref="student_data1"/>
             <field name="class_id" ref="class_division_data"/>
+            <field name="class_division_id" ref="class_division_data"/>
+            <field name="roll_no" ref="class_division_data"/>
         </record>
 
     </data>

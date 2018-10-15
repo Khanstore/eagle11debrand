@@ -25,7 +25,17 @@ class EducationExam(models.Model):
                                     related='division_id.academic_year_id', store=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env['res.company']._company_default_get())
-
+    transcript_id=fields.Many2one('academic.transcript')
+    result_sheet_created = fields.Boolean(string='result sheet Created')
+    @api.multi
+    @api.onchange('academic_year','exam_type')
+    def get_class_domain(self):
+        for rec in self:
+            domain=[]
+            existing_class=self.env['education.exam'].search([('exam_type.id','=',rec.exam_type.id),('academic_year.id','=',rec.academic_year.id)])
+            for cls in existing_class:
+                domain.append(cls.class_id.id)
+        return {'domain': {'class_id': [('id', '!=', domain)]}}
     @api.model
     def create(self, vals):
         res = super(EducationExam, self).create(vals)
@@ -62,12 +72,39 @@ class EducationExam(models.Model):
             name = name + ' (' + str(self.class_id.name) + ')'
         self.name = name
         self.state = 'ongoing'
+    @api.multi
+    def create_result_sheet(self):
+        sections=self.env['education.class.division'].search([('academic_year_id','=',self.academic_year.id),('class_id','=',self.class_id.id)])
+        subjects=self.subject_line
+        for section in sections:
+            for subject in subjects:
+                self.env['education.exam.valuation'].create({
+                    'exam_id':self.id,
+                    'class_id':self.class_id.id,
+                    'division_id':section.id,
+                    # 'section_id':self.section,
+                    'subject_id':subject.subject_id.id,
+                    'academic_year':self.academic_year.id,
+                })
 
+    @api.multi
+    def get_subjects(self):
+        for rec in self:
+            subjline_obj=self.env['education.subject.line']
 
+            subjects=self.env['education.syllabus'].search([('class_id','=',rec.class_id.id),('academic_year','=',rec.academic_year.id)])  #.search([('class_id', '=', self.id)])
+            for subject in subjects :
+                data={'subject_id': subject.id,
+                      'exam_id': rec.id,
+                      'time_from': '10.30',
+                      'time_to': '12.30',
+                      'date':rec.start_date
+                      }
+                subjline_obj.create(data)
 class SubjectLine(models.Model):
     _name = 'education.subject.line'
-
-    subject_id = fields.Many2one('education.subject', string='Subject', required=True)
+    _rec_name = 'subject_id'
+    subject_id = fields.Many2one('education.syllabus', string='Subject', required=True)
     date = fields.Date(string='Date', required=True)
     time_from = fields.Float(string='Time From', required=True)
     time_to = fields.Float(string='Time To', required=True)
@@ -75,7 +112,7 @@ class SubjectLine(models.Model):
     exam_id = fields.Many2one('education.exam', string='Exam')
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env['res.company']._company_default_get())
-
+    _sql_constraints = [('unque_subject_exam','unique(subject_id,exam_id)','Subject Already added!'),]
 
 class EducationExamType(models.Model):
     _name = 'education.exam.type'
@@ -85,3 +122,16 @@ class EducationExamType(models.Model):
                                                   string='Exam Type', default='class')
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env['res.company']._company_default_get())
+class examlist(models.AbstractModel):
+    _name='exam.list'
+    name=fields.Char("exam List")
+    batch=fields.Many2one('education.academic.year',"batch")
+    class_id= fields.Many2one('education.class',"Class")
+    group= fields.Many2one('education.division',"Group")
+    section= fields.Many2one('education.class.section',"Section")
+    subject= fields.Many2one('education.syllabus',"Subject")
+    exam_type= fields.Many2one('education.exam.type',"Exam")
+
+    @api.onchange('batch')
+    def change_batch(self):
+        pass

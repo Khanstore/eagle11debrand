@@ -9,7 +9,8 @@
                 <field name="name"/>
                 <field name="class_id"/>
                 <field name="subject_id"/>
-                <field name="total_hours"/>
+                <field name="paper"/>
+                <!--<field name="total_hours"/>-->
                 <field name="description"/>
             </tree>
         </field>
@@ -21,18 +22,47 @@
         <field name="arch" type="xml">
             <form string="Syllabus">
                 <sheet>
-                    <group>
-                        <group>
+
+                        <group col="4">
                             <field name="name"/>
+                            <field name="code"/>
+                            <field name="display"/>
+                        </group>
+                        <group col="4">
+
+                            <field name="academic_year" required="1"/>
                             <field name="class_id" required="1"/>
+                            <field name="divisional" required="1"/>
+                            <field name="division_id" attrs="{'invisible': [('divisional', '=',False)]}"/>
                         </group>
-                        <group>
+                        <group col="4">
                             <field name="subject_id"/>
-                            <field name="total_hours"/>
+                            <field name="paper"/>
+                            <!--<field name="total_hours"/>-->
                         </group>
-                    </group>
-                    <group>
+
+                    <group col="4">
+
+                        <field name="subject_type"/>
+                        <field name="selection_type"/>
                         <field name="description"/>
+                    </group>
+                    <group col="4"  string="Mark Distribution">
+                        <group col="4">
+                            <label string="Exam Type"/>
+                            <label string="Max Mark"/>
+                            <label string="Pass Mark"/>
+                            <field name="tut_mark"/>
+                             <field name="tut_pass" nolabel='1'/>
+                            <field name="subj_mark"/>
+                            <field name="subj_pass" nolabel='1'/>
+                            <field name="obj_mark"/>
+                            <field name="obj_pass" nolabel='1'/>
+                            <field name="prac_mark"/>
+                            <field name="prac_pass" nolabel='1'/>
+                            <field name="total_mark"/>
+                            <field name="pass_mark" nolabel='1'/>
+                        </group>
                     </group>
                 </sheet>
             </form>

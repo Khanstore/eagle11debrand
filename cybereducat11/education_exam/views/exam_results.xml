@@ -35,8 +35,8 @@
                                         <field name="max_mark" sum="Total"/>
                                         <field name="pass_mark" sum="Total"/>
                                         <field name="mark_scored" sum="Total"/>
-                                        <field name="grade"/>
-                                        <field name="score"/>
+                                        <field name="letter_grade"/>
+                                        <field name="grade_point"/>
                                         <field name="pass_or_fail" widget="boolean_toggle" readonly="1"/>
                                         <field name="result_id" invisible="1"/>
                                     </tree>
@@ -124,8 +124,8 @@
                     <field name="max_mark"/>
                     <field name="pass_mark"/>
                     <field name="mark_scored"/>
-                    <field name="grade"/>
-                    <field name="score"/>
+                    <field name="letter_grade"/>
+                    <field name="grade_point"/>
                     <field name="pass_or_fail" widget="boolean_toggle" readonly="1"/>
                     <field name="academic_year" invisible="1"/>
                 </tree>

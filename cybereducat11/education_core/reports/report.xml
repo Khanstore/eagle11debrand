@@ -47,7 +47,7 @@
         />
         <report
             id="action_exam_marksheet"
-            model="'education.tabulation.wizard'"
+            model="education.exam.results"
             string="Print Marksheet"
             report_type="qweb-pdf"
             name="education_core.report_exam_marksheet"

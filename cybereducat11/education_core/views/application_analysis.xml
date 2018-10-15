@@ -18,7 +18,7 @@
         <field name="arch" type="xml">
             <pivot string="Application">
                 <field name="academic_year_id" type="row"/>
-                <field name="admission_date" interval="month" type="col"/>
+                <field name="application_date" interval="month" type="col"/>
             </pivot>
         </field>
     </record>

@@ -5,6 +5,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
+
 class EducationExamValuation(models.Model):
     _name = 'education.exam.valuation'
 
@@ -12,35 +13,50 @@ class EducationExamValuation(models.Model):
     exam_id = fields.Many2one('education.exam', string='Exam', required=True, domain=[('state', '=', 'ongoing')])
     class_id = fields.Many2one('education.class', string='Class', required=True)
     division_id = fields.Many2one('education.class.division', string='Division', required=True)
+    subject_id = fields.Many2one('education.syllabus', string='Subject', required=True)
     teachers_id = fields.Many2one('education.faculty', string='Evaluator')
-    mark = fields.Float(string='Max Mark', compute='calculate_marks')
-    pass_mark = fields.Float(string='Pass Mark', compute='calculate_marks')
-    tut_mark = fields.Integer('Tutorial Mark')
-    tut_pass_mark = fields.Integer('Tutorial Pass Mark')
-    subj_mark = fields.Integer('Subjective Mark')
-    subj_pass_mark = fields.Integer('Subjective Pass Mark')
+    mark = fields.Float(string='Max Mark', related='subject_id.total_mark')
+    pass_mark = fields.Float(string='Pass Mark', related='subject_id.pass_mark')
+    tut_mark = fields.Float('Tutorial Mark',related='subject_id.tut_mark')
+    tut_pass_mark = fields.Float('Tutorial Pass Mark',related='subject_id.tut_pass')
+    subj_mark = fields.Float('Subjective Mark',related='subject_id.subj_mark')
+    subj_pass_mark = fields.Float('Subjective Pass Mark',related='subject_id.subj_pass')
 
-    obj_mark = fields.Integer('Objective Mark')
-    obj_pass_mark = fields.Integer('Objective Pass Mark')
+    obj_mark = fields.Float('Objective Mark',related='subject_id.obj_mark')
+    obj_pass_mark = fields.Float('Objective Pass Mark',related='subject_id.obj_pass')
 
-    prac_mark = fields.Integer('Practical Mark')
-    prac_pass_mark = fields.Integer('Practical Pass Mark')
+    prac_mark = fields.Float('Practical Mark',related='subject_id.prac_mark')
+    prac_pass_mark = fields.Float('Practical Pass Mark',related='subject_id.prac_pass')
 
     state = fields.Selection([('draft', 'Draft'), ('completed', 'Completed'), ('cancel', 'Canceled')], default='draft')
     valuation_line = fields.One2many('exam.valuation.line', 'valuation_id', string='Students')
-    subject_id = fields.Many2one('education.subject', string='Subject', required=True)
     mark_sheet_created = fields.Boolean(string='Mark sheet Created')
     date = fields.Date(string='Date', default=fields.Date.today)
     academic_year = fields.Many2one('education.academic.year', string='Academic Year',
                                     related='division_id.academic_year_id', store=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env['res.company']._company_default_get())
-
+    highest=fields.Float('Highest mark Obtained')
+    # @api.multi
+    # def get_highest(self):
+    #     for rec in self:
+    #         evlauation_line=self.env['exam.valuation.line'].search([('valuation_id','=',rec.id)],order='mark_scored asc',limit=1)
+    #
+    #         rec.highest=evlauation_line.mark_scored
+    @api.onchange('exam_id','division_id')
+    def domain4subject(self):
+        domain = []
+        for rec in self:
+            if rec.division_id.id:
+                result_created=self.env['education.exam.valuation'].search([('exam_id.id','=',rec.exam_id.id),('division_id.id','=',rec.division_id.id)])
+                for res in result_created:
+                    domain.append(res.subject_id.id)
+        return {'domain': {'subject_id': [('id', '!=', domain)]}}
     @api.onchange('tut_mark','tut_pass_mark','subj_mark','subj_pass_mark','obj_mark','obj_pass_mark','prac_mark','prac_pass_mark')
     def calculate_marks(self):
         for rec in self:
-            rec.mark=rec.tut_mark+rec.subj_mark+rec.obj_mark+rec.subj_mark+rec.prac_mark
-            rec.pass_mark=rec.tut_pass_mark+rec.subj_pass_mark+rec.obj_pass_mark+rec.subj_pass_mark+rec.prac_pass_mark
+            rec.mark=rec.tut_mark+rec.subj_mark+rec.obj_mark+rec.prac_mark
+            rec.pass_mark=rec.tut_pass_mark+rec.subj_pass_mark+rec.obj_pass_mark+rec.prac_pass_mark
 
 
 
@@ -55,15 +71,15 @@ class EducationExamValuation(models.Model):
             domain = [('class_id', '=', self.class_id.id)]
         return {'domain': {'division_id': domain}}
 
-    @api.onchange('pass_mark')
-    def onchange_pass_mark(self):
-        if self.pass_mark > self.mark:
-            raise UserError(_('Pass mark must be less than Max Mark'))
-        for records in self.valuation_line:
-            if records.mark_scored >= self.pass_mark:
-                records.pass_or_fail = True
-            else:
-                records.pass_or_fail = False
+    # @api.onchange('pass_mark')
+    # def onchange_pass_mark(self):
+    #     if self.pass_mark > self.mark:
+    #         raise UserError(_('Pass mark must be less than Max Mark'))
+    #     for records in self.valuation_line:
+    #         if records.mark_scored >= self.pass_mark:
+    #             records.pass_or_fail = True
+    #         else:
+    #             records.pass_or_fail = False
 
     @api.onchange('exam_id', 'subject_id')
     def onchange_exam_id(self):
@@ -90,19 +106,27 @@ class EducationExamValuation(models.Model):
 
     @api.multi
     def create_mark_sheet(self):
+
+
         valuation_line_obj = self.env['exam.valuation.line']
-        students = self.division_id.student_ids
-        if len(students) < 1:
+        history = self.env['education.class.history'].search([('level','=',self.class_id.id),('section','=',self.division_id.id),
+                                                              '|',('compulsory_subjects','=',self.subject_id.id),'|',('selective_subjects','=',self.subject_id.id),('optional_subjects','=',self.subject_id.id)])     #division_id.student_ids
+        if len(history) < 1:
             raise UserError(_('There are no students in this Division'))
-        for student in students:
+        for student in history:
             data = {
-                'student_id': student.id,
-                'student_name': student.name,
+                'student_id': student.student_id.id,
+                'student_name': student.student_id.name,
                 'valuation_id': self.id,
+                'tut_mark': 0,
+                'subj_mark': 0,
+                'obj_mark': 0,
+                'letter_grade': 'F',
+                'prac_mark': 0,
+                'grade_point': 0,
             }
             valuation_line_obj.create(data)
         self.mark_sheet_created = True
-
     @api.model
     def create(self, vals):
         res = super(EducationExamValuation, self).create(vals)
@@ -153,6 +177,8 @@ class EducationExamValuation(models.Model):
                     'division_id': self.division_id.id,
                     'student_id': students.student_id.id,
                     'student_name': students.student_id.name,
+                    'letter_grade': students.letter_grade,
+                    'grade_point': students.grade_point,
                 }
                 result_line_obj.create(result_line_data)
             else:
@@ -172,6 +198,8 @@ class EducationExamValuation(models.Model):
                     'division_id': self.division_id.id,
                     'student_id': students.student_id.id,
                     'student_name': students.student_id.name,
+                    'letter_grade': students.letter_grade,
+                    'grade_point': students.grade_point,
                 }
                 result_line_obj.create(result_line_data)
         self.state = 'completed'
@@ -199,18 +227,28 @@ class StudentsExamValuationLine(models.Model):
 
     student_id = fields.Many2one('education.student', string='Students')
     student_name = fields.Char(string='Students')
-    mark_scored = fields.Float(string='Mark',compute='calculate_marks')
-    tut_mark=fields.Float(string='Tutorial')
-    subj_mark=fields.Float(string='Subjective')
-    obj_mark=fields.Float(string='Objective')
-    prac_mark=fields.Float(string='Practical')
+    mark_scored = fields.Float(string='Mark')
+    tut_mark=fields.Float(string='Tutorial',default=0)
+    subj_mark=fields.Float(string='Subjective' ,default=0)
+    obj_mark=fields.Float(string='Objective',default=0)
+    prac_mark=fields.Float(string='Practical',default=0)
     pass_or_fail = fields.Boolean(string='Pass/Fail')
     valuation_id = fields.Many2one('education.exam.valuation', string='Valuation Id')
+    letter_grade=fields.Char('Letter Grade')
+    grade_point=fields.Float('Grade Point')
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env['res.company']._company_default_get())
 
     @api.onchange('mark_scored', 'pass_or_fail')
     def onchange_mark_scored(self):
+
+        per_obtained = (self.mark_scored * 100) / self.valuation_id.mark
+        grades = self.env['education.result.grading'].search([['id', '>', '0']])
+        for gr in grades:
+            if gr.min_per <= per_obtained and gr.max_per >= per_obtained:
+                self.letter_grade = gr.result
+                self.grade_point = gr.score
+
         if self.mark_scored > self.valuation_id.mark:
             raise UserError(_('Mark Scored must be less than Max Mark'))
         # if self.mark_scored >= self.valuation_id.pass_mark:
@@ -225,8 +263,29 @@ class StudentsExamValuationLine(models.Model):
         else :
             self.pass_or_fail=False
 
+
+
     @api.multi
     @api.onchange('tut_mark','subj_mark','obj_mark','prac_mark')
     def calculate_marks(self):
         for rec in self:
-            rec.mark_scored=rec.tut_mark+ rec.obj_mark+rec.subj_mark+rec.prac_mark
+
+            if rec.tut_mark<0:
+                raise UserError(_('Mark Scored must be greater than Zero'))
+            elif rec.tut_mark>rec.valuation_id.tut_mark:
+                raise UserError(_('Mark Scored must be less than Max Tutorial Mark'))
+            if rec.obj_mark<0:
+                raise UserError(_('Mark Scored must be greater than Zero'))
+            elif rec.obj_mark>rec.valuation_id.obj_mark:
+                raise UserError(_('Mark Scored must be less than Max Objective Mark'))
+            if rec.subj_mark<0:
+                raise UserError(_('Mark Scored must be greater than Zero'))
+            elif rec.subj_mark>rec.valuation_id.subj_mark:
+                raise UserError(_('Mark Scored must be less than Max Subjective Mark'))
+            if rec.prac_mark<0:
+                raise UserError(_('Mark Scored must be greater than Zero'))
+            elif rec.prac_mark>rec.valuation_id.prac_mark:
+                raise UserError(_('Mark Scored must be less than Max Practical Mark'))
+            rec.mark_scored = rec.tut_mark + rec.obj_mark + rec.subj_mark + rec.prac_mark
+            if rec.mark_scored > rec.valuation_id.highest:
+                rec.valuation_id.highest = rec.mark_scored

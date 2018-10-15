@@ -11,17 +11,23 @@
                                 <center>
                                     <div class="col-xs-12" style="margin:auto">
                                         <h2><span>Student Application Form/Online</span></h2>
-                                        <div class="col-xs-8" style="margin:auto">
+                                        <div class="col-xs-12" style="margin:auto">
+                                            <h4><span>For </span><span t-field="o.register_id.name"/></h4>
+                                        </div>
+                                            <div class="col-xs-8" style="margin:auto">
                                             <p style="padding-top:20px;"/>
                                             <table class="table table-condensed">
+                                                <tr><td></td><td> <span>In English</span></td><td> <span>বাংলায়</span></td></tr>
                                                 <tr>
                                                     <td>
                                                         <strong><span>Student's Name:</span></strong>
                                                     </td>
                                                     <td>
                                                         <span t-field="o.name"/>
-                                                        <span t-field="o.middle_name"/>
-                                                        <span t-field="o.last_name"/>
+                                                        <!--<span t-field="o.middle_name"/>-->
+                                                        <!--<span t-field="o.last_name"/>-->
+                                                    </td><td>
+                                                        <span t-field="o.name_b"/>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -29,9 +35,13 @@
                                                         <strong><span>Father's Name:</span></strong>
                                                     </td>
                                                     <td>
-                                                        <span t-if="o.father_name" t-field="o.name"/>
+                                                        <span t-if="o.father_name" t-field="o.name_b"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-if="o.father_name_b" t-field="o.name_b"/>
                                                     </td>
                                                 </tr>
+
                                                 <tr>
                                                     <td>
                                                         <strong><span>Mother's Name:</span></strong>
@@ -40,12 +50,20 @@
                                                         <span t-if="o.mother_name" t-field="o.mother_name"/>
                                                     </td>
                                                 </tr>
+                                                 <tr>
+                                                    <td>
+                                                        <strong><span>মায়ের নাম:</span></strong>
+                                                    </td>
+                                                    <td>
+                                                        <span t-if="o.mother_name_b" t-field="o.mother_name_b"/>
+                                                    </td>
+                                                </tr>
                                                 <tr>
                                                     <td>
                                                         <strong><span>Guardian's Name:</span></strong>
                                                     </td>
                                                     <td>
-                                                        <span t-if="o.guardian_name" t-field="o.guardian_name.name"/>
+                                                        <span t-if="o.guardian_name" t-field="o.guardian_name"/>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -56,18 +74,18 @@
                                                         <span t-if="o.academic_year_id" t-field="o.academic_year_id.name"/>
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td style="text-align:left; padding-left:10px;" class="col-xs-4">
-                                                        <strong><span t-if="o.admission_class">Admission Class:</span></strong>
-                                                    </td>
-                                                    <td style="text-align:left;" class="col-xs-4">
-                                                        <span t-if="o.admission_class" t-field="o.admission_class.name"/>
-                                                    </td>
-                                                </tr>
+                                                <!--<tr>-->
+                                                    <!--<td style="text-align:left; padding-left:10px;" class="col-xs-4">-->
+                                                        <!--<strong><span t-if="o.admission_class">Admission Class:</span></strong>-->
+                                                    <!--</td>-->
+                                                    <!--<td style="text-align:left;" class="col-xs-4">-->
+                                                        <!--<span t-if="o.admission_class" t-field="o.admission_class.name"/>-->
+                                                    <!--</td>-->
+                                                <!--</tr>-->
                                             </table>
                                         </div>
                                         <div class="col-xs-4" style="margin:auto">
-                                            <p style="text-align:center;padding-top:20px;"><strong>DATE : <span t-field="o.admission_date"/> </strong></p>
+                                            <!--<p style="text-align:center;padding-top:20px;"><strong>DATE : <span t-field="o.admission_date"/> </strong></p>-->
                                             <img t-if="not o.image" t-att-src="'/education_core/static/src/img/placeholder.jpg'" height="120" border="1" width="120"/>
                                             <img t-if="o.image" t-att-src="'data:image/png;base64,%s' % to_text(o.image)" height="120" border="1" width="80"/>
                                         </div>

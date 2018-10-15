@@ -11,7 +11,8 @@ class EducationAmenities(models.AbstractModel):
     def get_objects(self, objects):
         obj = []
         for object in objects:
-            obj.extend(object)
+           obj.extend(object)
+
         return obj
 
     def get_subjects(self, obj):
@@ -19,6 +20,13 @@ class EducationAmenities(models.AbstractModel):
         for subj in obj.subject_line:
             subjs.extend(subj)
         return subjs
+    def get_gradings(self,obj):
+        grading=self.env['education.result.grading'].search([('id','>','0')])
+        grades=[]
+        for grade in grading:
+            grades.extend(grade)
+        return grades
+
 
     def get_date(self, date):
         date1 = datetime.strptime(date, "%Y-%m-%d")
@@ -33,9 +41,7 @@ class EducationAmenities(models.AbstractModel):
             'time': time,
             'get_objects': self.get_objects,
             'get_subjects': self.get_subjects,
+            'get_gradings':self.get_gradings,
             'get_date': self.get_date,
             # 'get_total': self.get_total,
         }
-class examtabulationwizard(models.TransientModel):
-    _name='education.tabulation.wizard'
-    exam_id=fields.Many2one('education.exam.results')

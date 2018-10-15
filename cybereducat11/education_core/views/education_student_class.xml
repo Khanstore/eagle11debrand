@@ -6,7 +6,8 @@
         <field name="model">education.student.class</field>
         <field name="arch" type="xml">
             <tree string="Assign Class">
-                <field name="class_id"/>
+                <field name="name"/>
+                <!--<field name="class_id"/>-->
             </tree>
         </field>
     </record>
@@ -20,10 +21,9 @@
                     <button name="get_student_list" type="object"
                             string="Get Students" groups="base.group_user"
                             help="Click to get student list" states="draft"/>
-                    <button name="%(education_core.application_create_student)d" string="Assign Class"
-                                type="action" class="oe_highlight"
-                                context="{'default_id': active_id, 'default_student_class': class_id,
-                                'default_assigned_by': assigned_by}"
+                    <!--<button name="%(education_core.application_create_student)d" string="Assign Class"-->
+                    <button name='assign_class' string="Assign Class"
+                                type="object" class="oe_highlight"
                                 help="Click to assign class for selected students"
                                 states="draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
@@ -31,9 +31,11 @@
                 <sheet string="Assign Students">
                     <group>
                         <group>
+                            <field name="assign_date" attrs="{'readonly': [('state', '=', 'done')]}"/>
                             <field name="class_id" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                            <field name="admitted_class" attrs="{'readonly': [('state', '=', 'done')] , 'invisible': [('class_id', '=', False)]}"  domain="[('class_id','=',class_id)]"/>
                             <field name="assigned_by" attrs="{'invisible': [('state', '!=', 'done')]}"/>
-                            <field name="admitted_class" attrs="{'invisible': [('admitted_class', '=', False)]}"/>
+                            <!--<field name="admitted_class" attrs="{'invisible': [('admitted_class', '=', False)]}"/>-->
                         </group>
                         <group>
                         </group>
@@ -44,7 +46,8 @@
                                     context="{'default_class_id': class_id}">
                                  <tree string="Student List" editable="bottom">
                                      <field name="student_id"/>
-                                     <field name="class_id"/>
+                                     <field name="roll_no"/>
+                                     <field name="class_id" invisible="True"/>
                                  </tree>
                              </field>
                         </page>

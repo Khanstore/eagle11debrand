@@ -22,7 +22,6 @@ class EducationExamResults(models.Model):
     total_max_mark = fields.Float(string='Total Max Mark', store=True, readonly=True, compute='_total_marks_all')
     total_mark_scored = fields.Float(string='Total Marks Scored', store=True, readonly=True, compute='_total_marks_all')
     overall_pass = fields.Boolean(string='Overall Pass/Fail', store=True, readonly=True, compute='_total_marks_all')
-
     @api.depends('subject_line.mark_scored')
     def _total_marks_all(self):
         for results in self:
@@ -49,10 +48,10 @@ class ResultsSubjectLine(models.Model):
     subj_mark = fields.Float(string='Subjective')
     obj_mark = fields.Float(string='Objective')
     prac_mark = fields.Float(string='Practical')
-    grade=fields.Char('Grade',compute='_compute_grade')
-    score=fields.Float('GP')
+    letter_grade=fields.Char('Grade')
+    grade_point=fields.Float('GP')
     name = fields.Char(string='Name')
-    subject_id = fields.Many2one('education.subject', string='Subject')
+    subject_id = fields.Many2one('education.syllabus', string='Subject')
     max_mark = fields.Float(string='Max Mark')
     pass_mark = fields.Float(string='Pass Mark')
     mark_scored = fields.Float(string='Mark Scored')
@@ -68,14 +67,13 @@ class ResultsSubjectLine(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env['res.company']._company_default_get())
 
-    @api.multi
-    @api.depends('mark_scored')
-    def _compute_grade(self):
-        for record in self:
-            per_obtained=(record.mark_scored * 100)/record.max_mark
-            grades = self.env['education.result.grading'].search([['id', '>', '0']])
-            for gr in grades:
-                if gr.min_per <= per_obtained and \
-                        gr.max_per >= per_obtained:
-                    record.grade = gr.result
-                    record.score = gr.score
+    # @api.constrains
+    # def _compute_grade(self):
+    #     for record in self:
+    #         per_obtained=(record.mark_scored * 100)/record.max_mark
+    #         grades = self.env['education.result.grading'].search([['id', '>', '0']])
+    #         for gr in grades:
+    #             if gr.min_per <= per_obtained and \
+    #                     gr.max_per >= per_obtained:
+    #                 record.grade = gr.result
+    #                 record.score = gr.score

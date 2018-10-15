@@ -7,9 +7,9 @@
             <tree string="Syllabus Subject">
                 <field name="name"/>
                 <field name="code"/>
-                <field name="type"/>
-                <field name="is_language"/>
-                <field name="weightage"/>
+                <!--<field name="type"/>-->
+                <!--<field name="is_language"/>-->
+                <!--<field name="weightage"/>-->
             </tree>
         </field>
     </record>
@@ -23,13 +23,13 @@
                     <group string="Subject">
                         <group>
                             <field name="name"/>
-                            <field name="type"/>
-                            <field name="is_language"/>
+                            <!--<field name="type"/>-->
+                            <!--<field name="is_language"/>-->
                         </group>
                         <group>
                             <field name="code"/>
-                            <field name="weightage"/>
-                            <field name="is_lab"/>
+                            <!--<field name="weightage"/>-->
+                            <!--<field name="is_lab"/>-->
                         </group>
                         <field name="description" placeholder="Enter description here"/>
                     </group>
@@ -44,15 +44,15 @@
         <field name="model">education.subject</field>
         <field name="arch" type="xml">
             <search string="Search Subjects">
-                <field name="is_language"/>
-                <field name="is_lab"/>
-                <field name="type"/>
-                <field name="weightage"/>
-                <filter string="Is Language" name="is_language" domain="[('is_language','=', True)]"/>
-                <filter string="Is Lab" name="is_lab" domain="[('is_lab','=', True)]"/>
+                <!--<field name="is_language"/>-->
+                <!--<field name="is_lab"/>-->
+                <!--<field name="type"/>-->
+                <!--<field name="weightage"/>-->
+                <!--<filter string="Is Language" name="is_language" domain="[('is_language','=', True)]"/>-->
+                <!--<filter string="Is Lab" name="is_lab" domain="[('is_lab','=', True)]"/>-->
                 <group expand='0' string='Group by...'>
-                    <filter string='Weightage' icon="fa-user" domain="[]" context="{'group_by' : 'weightage'}"/>
-                    <filter string='Type' icon="fa-genderless" domain="[]" context="{'group_by' : 'type'}"/>
+                    <!--<filter string='Weightage' icon="fa-user" domain="[]" context="{'group_by' : 'weightage'}"/>-->
+                    <!--<filter string='Type' icon="fa-genderless" domain="[]" context="{'group_by' : 'type'}"/>-->
                </group>
            </search>
         </field>

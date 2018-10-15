@@ -71,19 +71,21 @@
                     </div>
                         <group col="4">
                             <field name="name"/>
+                            <field name="display"/>
                             <field name="actual_strength"/>
-                            <field name="academic_year_id" attrs="{'readonly':[('id','>',1)]}"/>
+                            <field name="academic_year_id" attrs="{'readonly':[('id','>',0)]}"/>
                             <field name="faculty_id"/>
-                            <field name="class_id" attrs="{'readonly':[('id','>',1)]}"/>
-                            <field name="division_id" attrs="{'readonly':[('id','>',1)]}"/>
-                            <field name="section_id" attrs="{'readonly':[('id','>',1)]}"/>
+                            <field name="class_id" attrs="{'readonly':[('id','>',0)]}"/>
+                            <field name="division_id" attrs="{'readonly':[('id','>',0)]}"/>
+                            <field name="section_id" attrs="{'readonly':[('id','>',0)]}"/>
+                            <field name="class_room" />
                         </group>
                     <notebook>
                         <page string="Students">
                             <field name="student_ids" nolabel="1">
                                 <tree string="Students" editable="bottom" create="false">
+                                    <field name="roll_no"/>
                                     <field name="name"/>
-                                    <field name="class_id"/>
                                     <field name="gender"/>
                                     <field name="date_of_birth"/>
                                     <field name="blood_group"/>
