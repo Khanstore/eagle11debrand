@@ -48,7 +48,17 @@ class acdemicTranscripts(models.AbstractModel):
         for subj in student_history.optional_subjects:
             subjs.extend(subj)
         return subjs
-
+    def count_subjects(self,student_history,object,optional):
+        count = 0
+        if optional=='optional':
+            for subj in student_history.optional_subjects:
+                count=count+0
+        else:
+            for subj in student_history.compulsory_subjects:
+                count = count + 0
+            for subj in student_history.selective_subjects:
+                count = count + 0
+        return count
     def get_gradings(self,obj):
         grading=self.env['education.result.grading'].search([('id','>','0')],order='min_per desc',)
         grades=[]
@@ -59,6 +69,7 @@ class acdemicTranscripts(models.AbstractModel):
         student=student_history.student_id
         marks=self.env['results.subject.line'].search([('exam_id','=',exam.id),('subject_id','=',subject.id),('student_id','=',student.id)])
         return marks
+    
     def get_exam_obtained_total(self,exam,student_history,optional):
         student = student_history.student_id
         marks = self.env['results.subject.line'].search(
@@ -144,4 +155,5 @@ class acdemicTranscripts(models.AbstractModel):
             'get_optional_subjects': self.get_optional_subjects,
             'get_exam_total': self.get_exam_total,
             'get_exam_obtained_total': self.get_exam_obtained_total,
+            'count_subjects': self.count_subjects,
         }

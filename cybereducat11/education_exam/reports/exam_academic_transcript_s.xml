@@ -44,6 +44,11 @@
 
                         </style>
 <!--   ######    Variables for the report    -->
+                        <t t-set="subject_count" t-value="count_subjects(student,docs,'non_optional')"/>
+                        <t t-set="optional_subject_count" t-value="count_subjects(student,docs,'optional')"/>
+                        <t t-set="gpa" t-value="0"/>
+                        <t t-set="optional_gpa" t-value="0"/>
+                        <t t-set="total_gpa" t-value="0"/>
                         <t t-set="optional_obtained_total" t-value="0"/>
                         <t t-set="optional_total" t-value="0"/>
                         <t t-set="exam_obtained_total" t-value="0"/>
@@ -179,7 +184,14 @@
                                                   <td><span t-field="highest.mark_scored"/></td>
                                                   <td><span t-field="mark.letter_grade"/></td>
                                                   <td><span t-field="mark.grade_point"/></td>
-                                                   <t t-if="subject_first"><td t-att-rowspan="subject_count"> <span t-esc="get_gpa(student,exam,'non_optional')"/></td><td t-att-rowspan="subject_count"></td></t>
+                                                   <t t-if="subject_first"><td t-att-rowspan="subject_count">
+                                                       <span t-esc="get_gpa(student,exam,'non_optional')"/></td>
+                                                       <td t-att-rowspan="subject_count">
+
+                                                                <t t-esc="get_gpa(student,exam,'non_optional')+(get_gpa(student,exam,'optional')-2)/subject_count"/>
+
+                                                       </td>
+                                                   </t>
                                                 </t>
                                             </t>
                                        </tr>
@@ -254,7 +266,7 @@
                                                   <td><span t-field="highest.mark_scored"/></td>
                                                   <td><span t-field="mark.letter_grade"/></td>
                                                   <td><span t-field="mark.grade_point"/></td>
-                                                   <t t-if="optional_first"><td t-att-rowspan="optional_count"> GP Above 2.0/></td></t>
+                                                   <t t-if="optional_first"><td t-att-rowspan="optional_count"> GP Above 2.0</td></t>
 
                                                 </t>
 
@@ -273,14 +285,16 @@
                                                         %)</td>
                                                     <!--round(6.2/9,2)-->
                                                 </t>
+                                                <t t-set="optional_gpa" t-value="get_gpa(student,exam,'optional')"/>
                                                 <td>
                                                     <t t-esc="optional_obtained_total"/>
                                                     <t t-set="marksFromAdditional" t-value="optional_obtained_total-(optional_total*40)/100"/>
                                                 </td><td colspan="5"></td>
                                             </t>
                                         </tr>
+
                                         <tr><td colspan="13">Total Marks with Additional Subject:(percentage of total mark With Additional Subject:<t t-esc="round((optional_obtained_total-(optional_total*40/100)+exam_obtained_total)/exam_total*100,2)"/>%)</td>
-                                            <td><t t-esc="marksFromAdditional + exam_obtained_total"/> </td><td colspan="2"></td><td colspan="3"></td></tr>
+                                            <td><t t-esc="marksFromAdditional + exam_obtained_total"/> </td><td colspan="3"></td><td ><t t-esc="optional_gpa-2"/></td></tr>
                                     <tr><td colspan="15">Continuous Assesment</td></tr>
                                         <tr><td colspan="4">Physical Training</td><td></td><td></td></tr>
                                     </table>
