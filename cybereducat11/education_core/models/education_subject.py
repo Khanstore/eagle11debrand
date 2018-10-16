@@ -114,3 +114,4 @@ class EducationSyllabus(models.Model):
         for rec in self:
             rec.total_mark=rec.tut_mark+rec.subj_mark+rec.obj_mark+rec.prac_mark
             rec.pass_mark=rec.tut_pass+rec.subj_pass+rec.obj_pass+rec.prac_pass
+    _sql_constraints = [('unque_syllabus_batch_level','unique(subject_id,academic_year,division_id,class_id,paper)','Subject Already added!'),]
