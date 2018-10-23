@@ -33,30 +33,9 @@ class examEvaluation(models.AbstractModel):
         subjs=self.env['education.syllabus'].search([('class_id','=',section.class_id.id),('academic_year','=',obj.academic_year.id)])
 
         return subjs
-    def get_marks(self,subject,student,exam):
-        marks=[]
-        mark_line=self.env['results.subject.line'].search([('student_id','=',student.id),('exam_id','=',exam.id),('subject_id','=',subject.id)])
-        if len(mark_line)==0:
-            if subject.tut_mark >0:
-                marks.append('0')
-            if subject.subj_mark >0:
-                marks.append('0')
-            if subject.obj_mark >0:
-                marks.append('0')
-            if subject.prac_mark >0:
-                marks.append('0')
-        else:
-            if mark_line.subject_id.tut_mark>0:
-                marks.append(mark_line.tut_mark)
-            elif  mark_line.subject_id.subj_mark>0:
-                marks.append(mark_line.subj_mark)
-            elif mark_line.subject_id.obj_mark > 0:
-                marks.append(mark_line.obj_mark)
-            elif  mark_line.subject_id.prac_mark>0:
-                marks.append(mark_line.prac_mark)
+    def get_marks(self,exam,subject,student):
+        marks=self.env['results.subject.line'].search([('exam_id','=',exam.id),('subject_id','=',subject.id),('student_id','=',student.id)])
         return marks
-
-
 
 
 
@@ -90,5 +69,4 @@ class examEvaluation(models.AbstractModel):
             'get_date': self.get_date,
             'get_sections': self.get_sections,
             'get_marks': self.get_marks,
-            # 'get_total': self.get_total,
         }
