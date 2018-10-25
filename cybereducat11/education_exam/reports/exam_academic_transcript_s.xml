@@ -20,6 +20,11 @@
                             float:right;
                             padding-top:90px;
                             }
+                            .left_top{
+                            float:left;
+                            padding-top:50px;
+                            padding-left:50px;
+                            }
                             .right{
                             float:right;
                             padding-top:10px;
@@ -27,6 +32,7 @@
                             padding-right:10px;
                             padding-bottom:10px;
                             }
+
                             <!--.rotated {-->
                             <!--writing-mode: tb-rl;-->
                             <!--transform: rotate(-90deg);-->
@@ -112,7 +118,7 @@
                                      <tr>
                                           <t t-foreach="get_exams(docs)" t-as="exam">
                                                 <t t-if="exam_first">
-                                                    <td rowspan="2">Subject</td><td rowspan="2">Paper</td><td colspan="8">Full Mark</td><td colspan="3">Obtained Marks</td><td class="rotated" rowspan="2">Total <br/> Mark</td><td rowspan="2"  class="rotated" >Highest <br/> Mark</td><td rowspan="2">LG</td><td rowspan="2">GP</td><td rowspan="2" class="rotated" >GPA <br/> (without <br/> 4th <br/>Subject)</td><td rowspan="2">GPA</td>
+                                                    <td rowspan="2">Subject</td><td rowspan="2">Paper</td><td colspan="10">Full Mark</td><td colspan="4">Obtained Marks</td><td class="rotated" rowspan="2">Total <br/> Mark</td><td rowspan="2"  class="rotated" >Highest <br/> Mark</td><td rowspan="2">LG</td><td rowspan="2">GP</td><td rowspan="2" class="rotated" >GPA <br/> (without <br/> 4th <br/>Subject)</td><td rowspan="2">GPA</td>
                                                 </t>
 
 
@@ -124,7 +130,7 @@
                                                   <!--here I input <tr>-->
                                              <p>&lt;tr&gt;</p>
                                               </t>
-                                              <td>Sub</td><td>pass</td><td>Obj</td><td>pass</td><td>Prac</td><td>pass</td><td>Full Mark</td><td>Pass Mark</td><td>Sub</td><td>Obj</td><td>Prac</td>
+                                              <td>Tut</td><td>Pass</td><td>Sub</td><td>Pass</td><td>Obj</td><td>Pass</td><td>Prac</td><td>pass</td><td>Full Mark</td><td>Pass Mark</td><td>Tut</td><td>Sub</td><td>Obj</td><td>Prac</td>
                                               <t t-if="exam_last">
                                                     <!--here I input </tr>-->
 
@@ -144,6 +150,12 @@
                                                    </td>
                                                    <td>
                                                        <span t-field="subject.paper"/>
+                                                   </td>
+                                                   <td>
+                                                       <span t-field="subject.tut_mark"/>
+                                                   </td>
+                                                   <td>
+                                                       <span t-field="subject.tut_pass"/>
                                                    </td>
                                                    <td>
                                                        <span t-field="subject.subj_mark"/>
@@ -176,6 +188,7 @@
 
                                                <t t-foreach="get_marks(exam,subject,student)" t-as="mark">
                                                   <!--<td><span t-field="mark.tut_mark"/></td>-->
+                                                  <td><span t-field="mark.tut_mark"/></td>
                                                   <td><span t-field="mark.subj_mark"/></td>
                                                   <td><span t-field="mark.obj_mark"/></td>
                                                   <td><span t-field="mark.prac_mark"/></td>
@@ -201,7 +214,7 @@
                                                 <t t-set="exam_obtained_total" t-value=" get_exam_obtained_total(exam,student,'non_optional')" />
                                                 <t t-set="exam_total" t-value=" get_exam_total(exam,student,docs,'non_optional')" />
                                                 <t t-if="exam_first">
-                                                    <td colspan="13">Total Mark Without Additional Subject:
+                                                    <td colspan="16">Total Mark Without Additional Subject:
                                                                 (percentage of total marks Without additional Subject:
                                                         <t t-esc="round(exam_obtained_total/exam_total * 100,2)"/> %)</td>
                                                     <!--round(6.2/9,2)-->
@@ -210,7 +223,7 @@
                                             </t>
                                         </tr>
                                         <tr>
-                                            <td colspan="19"> Additional Subject: (Mark above 40% and GPA  above 2.00) </td>
+                                            <td colspan="22"> Additional Subject: (Mark above 40% and GPA  above 2.00) </td>
                                         </tr>
 <!-- For Optional Subject-->
                                             <t t-set="optional_count" t-value="len(get_optional_subjects(student,docs))" />
@@ -227,6 +240,12 @@
                                                    </td>
                                                    <td>
                                                        <span t-field="optional.paper"/>
+                                                   </td>
+                                                   <td>
+                                                       <span t-field="optional.tut_mark"/>
+                                                   </td>
+                                                   <td>
+                                                       <span t-field="optional.tut_pass"/>
                                                    </td>
                                                    <td>
                                                        <span t-field="optional.subj_mark"/>
@@ -259,6 +278,7 @@
 
                                                <t t-foreach="get_marks(exam,optional,student)" t-as="mark">
                                                   <!--<td><span t-field="mark.tut_mark"/></td>-->
+                                                  <td><span t-field="mark.tut_mark"/></td>
                                                   <td><span t-field="mark.subj_mark"/></td>
                                                   <td><span t-field="mark.obj_mark"/></td>
                                                   <td><span t-field="mark.prac_mark"/></td>
@@ -267,6 +287,7 @@
                                                   <td><span t-field="mark.letter_grade"/></td>
                                                   <td><span t-field="mark.grade_point"/></td>
                                                    <t t-if="optional_first"><td t-att-rowspan="optional_count"> GP Above 2.0</td></t>
+                                                   <td></td>
 
                                                 </t>
 
@@ -279,7 +300,7 @@
                                                 <t t-set="optional_obtained_total" t-value=" get_exam_obtained_total(exam,student,'optional')" />
                                                 <t t-set="optional_total" t-value=" get_exam_total(exam,student,docs,'optional')" />
                                                 <t t-if="exam_first">
-                                                    <td colspan="13">Total Mark for Additional Subject:
+                                                    <td colspan="16">Total Mark for Additional Subject:
                                                                 (percentage of total marks for additional Subject:
                                                         <t t-esc="round(optional_obtained_total/optional_total * 100,2)"/>
                                                         %)</td>
@@ -289,21 +310,77 @@
                                                 <td>
                                                     <t t-esc="optional_obtained_total"/>
                                                     <t t-set="marksFromAdditional" t-value="optional_obtained_total-(optional_total*40)/100"/>
-                                                </td><td colspan="5"></td>
+                                                </td><td></td><td></td><td></td><td></td><td></td>
                                             </t>
                                         </tr>
 
-                                        <tr><td colspan="13">Total Marks with Additional Subject:(percentage of total mark With Additional Subject:<t t-esc="round((optional_obtained_total-(optional_total*40/100)+exam_obtained_total)/exam_total*100,2)"/>%)</td>
-                                            <td><t t-esc="marksFromAdditional + exam_obtained_total"/> </td><td colspan="3"></td><td ><t t-esc="optional_gpa-2"/></td></tr>
-                                    <tr><td colspan="15">Continuous Assesment</td></tr>
-                                        <tr><td colspan="4">Physical Training</td><td></td><td></td></tr>
+                                        <tr><td colspan="16">Total Marks with Additional Subject:(percentage of total mark With Additional Subject:<t t-esc="round((optional_obtained_total-(optional_total*40/100)+exam_obtained_total)/exam_total*100,2)"/>%)</td>
+                                            <td><t t-esc="marksFromAdditional + exam_obtained_total"/> </td><td colspan="3"></td><td ><t t-esc="optional_gpa-2"/></td><td></td></tr>
+                                    <tr><td colspan="22">Continuous Assesment</td></tr>
+                                        <tr>
+                                            <td >Physical Training</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td >Career Education</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
                                     </table>
 
                                 </div>
 
 
                                 <div class="row">
-
+                                   <div class="left_top">Position in order to Section</div>
+                                   <div class="left_top">Date Of Return</div>
+                                </div>
+                                <div class="row">
+                                   <div class="left_top">Position in order to Class</div>
+                                </div>
+                                <div class="row" width="100%">
+                                   <div class="left_top" width="33%">Signature of Class Teacher</div>
+                                   <div class="left_top">Signature of The Principal</div>
+                                   <div class="left_top">Signature of The Guardian</div>
                                 </div>
                             </div>
                         </div>
